@@ -1,0 +1,22 @@
+{% extends 'registros_financeiros/base-registro-financeiro.html' %}
+
+{% load static %}
+
+
+{% block titulo %} Adicionar Registro Financeiro {% endblock %}
+
+
+{% block main %}
+<form method="post" id="form">
+    {% csrf_token %}
+    {{ registro_financeiro_form }}
+    <button type="submit"> Salvar </button>
+</form>
+<script>
+    $('document').ready(()=>{
+        $("#id_data").attr("type","date")
+        $("#id_hora").attr("type","time").attr("step","1")
+    })
+</script>
+
+{% endblock %}

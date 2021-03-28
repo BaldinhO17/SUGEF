@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block css %}
+<style>
+  .principal{
+    font-size: 100px
+  }
+</style>
+{% endblock %}
+  
+{% block conteudo %}
+  <h1 class = "principal text-danger">
+    ERRO: {{erro}} !
+  </h1>
+{% endblock %}

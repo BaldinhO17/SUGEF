@@ -1,0 +1,105 @@
+{% extends 'janela.html' %}
+
+{% load static %}
+
+{% block breadcrumb %}
+Produções de Leite
+{% endblock %}
+
+{% block modal %}
+<!-- <div class="form-group">
+  <label for="nome">Nome:</label>
+  <span class="d-none">Por favor informe um nome.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="nome">
+</div>
+<div class="form-group">
+  <label for="data">Data:</label>
+  <span class="d-none">Por favor informe uma data.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="date" class="form-control" id="data">
+</div>
+<div class="form-group">
+  <label for="quantidade">Quatiadade (L):</label>
+  <span class="d-none">Por favor informe uma quantidade.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="quantidade">
+</div> -->
+{% endblock %}
+
+{% block tabela %}
+<script>
+  let tabela = $('table').DataTable({
+    ajax: {
+      url: `{% url 'carregar_producoes_de_leite' %}`,
+      type: 'GET',
+      },
+    columns: [
+      { title: 'Código', className: 'all' },
+      { title: 'Nome', className: 'all' },
+      { title: 'Quantidade (L)', className: 'min-desktop' },
+      { title: 'Data', className: 'min-desktop' },
+      { className: 'control', title: `<img src="{% static 'img/expandir.svg' %}">` }
+    ],
+    order: [[0, 'desc']],
+    buttons: [
+    {
+        text: `<img height='11px' src="{% static 'img/adicionar.svg' %}"><br>Adic.`,
+        className: 'btn-outline-success',
+        action: function () {
+          window.location.assign("{% url 'cadastrar_producao_de_leite' %}");
+        }
+      },
+      {
+        text: `<img height='13px' src="{% static 'img/graficos.svg' %}"><br>Grafic.`,
+        className: 'btn-outline-info',
+        action: function () { window.location.assign("{% url 'graficos_producoes_de_leite' %}");}
+      },
+      {
+        text: `<img height='10px' src="{% static 'img/editar.svg' %}"><br>Editar`,
+        className: 'editar',
+        extend: 'selectedSingle',
+        action: function () {
+          codigo = tabela.row({ selected: true }).data()[0]
+          url = "/producoes-de-leite/"+ codigo +"/editar/"
+          window.location.assign(url);
+        }
+      },
+      {
+        text: `<img height='13px' src="{% static 'img/apagar.svg' %}"><br>Apagar`,
+        className: 'apagar',
+        extend: 'selectedSingle',
+        action: function () {
+          codigo = tabela.row({ selected: true }).data()[0]
+          token = { 'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val() }
+          url = "/producoes-de-leite/"+ codigo +"/apagar/"
+          $.post(url, token, function (data) { 
+            if (typeof data.mensagem != "undefined"){
+              alert(data.mensagem)
+            }
+            tabela.ajax.reload(function () {}, false).columns.adjust()
+            $('#resultados').attr('max', tabela.rows().count())
+          })
+        }
+      }
+    ]
+  })
+  {% if mensagem %}
+    $('document').ready(()=>{
+      alert("{{mensagem}}")
+    })
+  {% endif %}
+</script>
+{% csrf_token %}
+{% endblock %}
+
+{% block validacao %}
+<script>
+</script>
+{% endblock %}
+
+{% block envio %}
+<script>
+  
+</script>
+{% endblock %}

@@ -1,0 +1,7 @@
+venv/
+data/
+scripts basicos linha de comando.txt
+Funcoes a implementar.json
+.vscode/
+__pycache__/
+*.pyc

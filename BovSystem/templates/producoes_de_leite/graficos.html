@@ -1,0 +1,156 @@
+{% extends 'animal-detalhes.html' %}
+
+{% load static %}
+
+{% block css %}
+<style>
+    .breadfake {
+        border-color:#e3e3e3;
+        border-style:solid;
+        border-width:0 1px 4px 1px;
+        border-radius: 0.5em;
+        text-align:center !important;
+        background-color:#f0f0f0 !important;
+    }
+    .no-padding {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+</style>
+{% endblock %}
+
+{% block url-voltar %} {% url 'produc_leite' %} {% endblock %}
+{% block codigo-nome %} {{ animal.codigo }} - {{ animal.nome }} {% endblock %}
+
+{% block titulo %} Gráfico teste {% endblock %}
+
+
+{% block especs %}
+<div class="col-12 row justify-content-center">
+    <div class="card bg-light my-3 mx-3 px-0 col-5 ">
+      <div class="card-header text-uppercase breadfake">
+        <div class="row justify-content-center">
+          <div class="col-6">
+            <h1 class="font-weight-bold text-uppercase" style="max-height: 20px; font-size: small;">
+                Leite produzido na semana
+            </h1>
+          </div>
+
+          <!-- <div class="dropdown col-6 no-padding">
+            <button class="btn bg-success dropdown-toggle" onloadstart="chargeInfo()" type="button" value="Geral" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Selecione o animal
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+              <button value="Geral" class="dropdown-item" type="button" onclick="changeValue()">Geral</button>
+              <button class="dropdown-item" type="button">Another action</button>
+              <button class="dropdown-item" type="button">Something else here</button>
+            </div>
+          </div> -->
+
+          <select class="custom-select bg-secondary dropdown-toggle" onload="chargeInfo()" id="ListaDeAnimais">
+            <option  onclick="chargeDataList()">Geral</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body ">
+        <canvas id="myChart" class="col-10" height="250"></canvas>
+      </div>
+    </div>
+    <div class="card bg-light my-3 mx-3 px-0 col-5 ">
+      <div class="card-header text-uppercase breadfake">Leite produzido na semana</div>
+      <div class="card-body">
+        <canvas id="myChart" class="col-10" height="250"></canvas>
+      </div>
+    </div>
+  </div>
+  <script>
+    var producLeite = [];
+    var codigo="Geral";
+    
+    function getMenuList(){
+      $.getJSON(`{% url 'get_femeas' %}`, {}, (dados) => {
+        $.each(dados.lista_femeas, (i)=>{
+          var option = '<option onclick="chargeDataList()">'+dados.lista_femeas[i]+'</option>';
+          $('#ListaDeAnimais').append(option)
+        });
+
+      });
+    }
+
+    function chargeDataList(){
+      var codigo = $("#ListaDeAnimais option:selected").text()
+      console.log(codigo)
+      var data = {codigo, codigo}
+      $.getJSON(`{% url 'dados_produc_leite' %}`, data, (dados) => {
+        console.log(dados)
+        producLeite = dados.lista
+        console.log(dados.lista)
+        console.log("aqui:")
+        console.log(myChart.data.datasets[0].data)
+        console.log("----")
+        console.log(producLeite)
+        myChart.data.datasets[0].data = producLeite
+        console.log("aqui 2 :")
+        console.log(myChart.data.datasets[0].data)
+        console.log("----")
+        myChart.update();
+      });
+      
+    }
+
+    function chargeInfo() {
+      getMenuList()
+      chargeDataList()
+    }
+    $(document).ready(chargeInfo());
+    
+    // function changeValue() {
+    //   codigo = $(this).text();
+    //   $('#ListaDeAnimais').find(":selected").text();
+    //   chargeDataList();
+    // }
+
+    Chart.platform.disableCSSInjection = true;
+    var ctx = document.getElementById('myChart').getContext("2d");
+    var gradientFill = ctx.createLinearGradient(0, 100, 0, 200);
+    gradientFill.addColorStop(0, "rgba(87, 184, 70, 0.8)");
+    gradientFill.addColorStop(1, "rgba(87, 184, 70, 0.2)");
+
+    var lista = producLeite
+    
+    var data = {
+            labels: ['DOM','SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'],
+            datasets: [{
+                label: 'Litros de leite',
+                data: [1,0,2,3,4,5,6],
+                backgroundColor: gradientFill,
+                borderColor: 'rgba(87, 184, 70, 1)',
+                borderWidth: 0,
+
+            }]
+        };
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+          scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+          },
+          title: {
+            display: true,
+            text: 'Geral',
+            fontStyle: 'bold',
+            fontColor: 'black',
+            fontSize: 15
+          }
+        }
+    });
+  </script>
+{% endblock %}
+  

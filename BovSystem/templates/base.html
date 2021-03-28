@@ -1,0 +1,90 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <title>SUGEF</title>
+  <link rel="shortcut icon" href="{% static 'img/icons/avatar-01.ico' %}">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.lumen.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/datatables.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/flexdatalist.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/Chart.min.css' %}">
+
+
+  <style>
+    html {
+      cursor: default;
+    }
+
+    .navbar {
+      z-index: 1;
+    }
+
+    .navbar-brand {
+      width: 38px;
+    }
+
+    .navbar img {
+      height: 25px;
+    }
+
+    @media (max-width: 1225px) {
+      .navbar small {
+        display: none;
+      }
+    }
+
+    .bg-black{
+      background-color: black;
+    }
+  </style>
+
+  {% block css %}
+
+  {% endblock %}
+
+</head>
+
+<body>
+
+  <nav class="navbar navbar-light bg-black py-0 px-1">
+    <div class="navbar-brand mr-0">
+      <a href="https://suap.ifrn.edu.br/" class="text-decoration-none">
+        <img src="{% static 'img/avatar-01.png' %}" class="d-inline-block align-center">
+        <small class="ml-1 font-weight-bold">
+          <span class="text-light">Ipanguaçu</span>
+        </small>
+      </a>
+    </div>
+    <span class="font-weight-bold text-light">
+      {% if  hora < 12 %}
+      Bom dia, 
+      {% elif hora < 18 %}
+      Boa tarde, 
+      {% else %}
+      Boa noite, 
+      {% endif %}
+      <span class="text-warning">{{ nome }}</span>!
+    </span>
+    <a href="{% url 'login' %}" class="btn btn-danger btn-sm">Sair</a>
+  </nav>
+  
+  <script src="{% static 'js/Chart.bundle.min.js' %}"></script>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'js/datatables.min.js' %}"></script>
+  <script src="{% static 'js/flexdatalist.min.js' %}"></script>
+  {% block conteudo %}
+  
+  {% endblock %}
+  
+  
+  
+
+</body>
+
+</html>
