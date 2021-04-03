@@ -10,7 +10,7 @@
 <form method="post">
     {% csrf_token %}
     {{ form }}
-    <button type="submit"> Salvar </button>
+    <button type="submit"class="btn btn-outline-success"> Salvar </button>
 </form>
 <script>
     $("form > label:nth-child(2)").attr("hidden",true)

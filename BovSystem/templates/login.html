@@ -1,7 +1,7 @@
 {% load static %}
 <html lang="pt-br">
 <head>
-	<title>SUGEF</title>
+	<title>BovSystem</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -26,24 +26,25 @@
 	<link rel="stylesheet"  href="{% static 'css/util.css' %}">
 	<link rel="stylesheet"  href="{% static 'css/main.css' %}">
 <!--===============================================================================================-->
+
 </head>
 <body>
 	
 	<div class="limiter">
-		<div class="container-login100">
+		<div id="login-container" class="container-login100">
 			<div class="wrap-login100 p-t-0 p-b-0">
-				<form class="login100-form validate-form" method="POST" action="{% url 'validacao' %}">
+				<form id="login_form"class="login100-form validate-form" method="POST" action="{% url 'validacao' %}">
 					{% csrf_token %}
 					<div class= "imagem" aling="center">
-					<img src="{% static 'img/avatar-01.jpg' %}" height="-200">
+					<img id="logo" src="{% static 'img/avatar-01.jpg' %}" width="400">
 					</div>
 					<div class="wrap-input100 validate-input m-t-85 m-b-35" data-validate = "Digite seu usuário">
-						<input class="input100" type="text" name="username">
+						<input id="input_login" class="input100" type="text" name="username">
 						<span class="focus-input100" data-placeholder="Usuário"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input m-b-50" data-validate="Digite sua senha">
-						<input class="input100" type="password" name="pass">
+						<input id="input_senha" class="input100" type="password" name="pass">
 						<span class="focus-input100" data-placeholder="Senha"></span>
 					</div>
 
@@ -56,22 +57,12 @@
 					
 
 					<ul class="login-more p-t-50">
-						<ul class="m-b-8">
-							<span class="txt1">
-								Esqueceu
-							</span>
-
-							<a href="#" class="txt2">
-								Usuário / Senha?
-							</a>
-						</ul>
-
 						<ul>
 							<span class="txt1">
 								Entrar como
 							</span>
 
-							<a href="https://www.youtube.com/watch?v=qkDlDPxzryI" class="txt2">
+							<a id="convidado" href="#" onclick="submitConvidado()">
 								convidado
 							</a>
 						</ul>
@@ -101,12 +92,18 @@
 <!--===============================================================================================-->
 	<script src="{% static 'js/main.js' %}"></script>
 	<script src="{% static 'js/jquery.min.js' %}"></script>
-{% if mensagem %}
-	<script>
+
+<script>
+	{% if mensagem %}
 		$('document').ready(()=>{
 		alert("{{mensagem}}")
 		})
-	</script>
-{% endif %}
+	{% endif %}
+	function submitConvidado(){
+		$("#input_login").val("alunoip")
+		$("#input_senha").val("ifrn")
+		$("#login_form").submit()
+	}
+</script>
 </body>
 </html>

@@ -157,6 +157,7 @@ iframe {
 
 .limiter {
   width: 100%;
+  height: 100vh;
   margin: 0 auto;
 }
 
@@ -172,12 +173,12 @@ iframe {
   justify-content: center;
   align-items: center;
   padding: 15px;
-  background: black;  
+  background: white;  
 }
 
 .wrap-login100 {
   width: 390px;
-  background: rgb(0, 0, 0);
+  background: rgb(255, 255, 255);
 }
 
 
@@ -210,7 +211,7 @@ iframe {
 }
 
 .login100-form-avatar img {
-  width: 100%;
+  width: 100vw;
 }
 
 /*------------------------------------------------------------------
@@ -225,7 +226,7 @@ iframe {
 .input100 {
   font-family: Poppins-SemiBold;
   font-size: 18px;
-  color: #fff;
+  color: #000;
   line-height: 1.2;
 
   display: block;
@@ -266,7 +267,7 @@ iframe {
 .focus-input100::after {
   font-family: Poppins-Medium;
   font-size: 18px;
-  color: #999999;
+  color: #000;
   line-height: 1.2;
 
   content: attr(data-placeholder);
@@ -318,7 +319,7 @@ iframe {
 .login100-form-btn {
   font-family: Poppins-Medium;
   font-size: 16px;
-  color: #fff;
+  color: #000;
   line-height: 1.2;
   text-transform: uppercase;
 
@@ -369,7 +370,7 @@ iframe {
   content: attr(data-validate);
   position: absolute;
   max-width: 70%;
-  background-color: #fff;
+  background-color: #000;
   border: 1px solid #c80000;
   border-radius: 2px;
   padding: 4px 25px 4px 10px;
@@ -405,7 +406,7 @@ iframe {
 
   display: block;
   position: absolute;
-  background-color: #fff;
+  background-color: #000;
   top: 50%;
   -webkit-transform: translateY(-50%);
   -moz-transform: translateY(-50%);
@@ -442,7 +443,7 @@ iframe {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background-color: #cccccc;
+  background-color: #000;
   top: 45%;
   -webkit-transform: translateY(-50%);
   -moz-transform: translateY(-50%);
@@ -450,4 +451,7 @@ iframe {
   -o-transform: translateY(-50%);
   transform: translateY(-50%);
   left: 0;
+}
+#convidado{
+color:#57b846;
 }

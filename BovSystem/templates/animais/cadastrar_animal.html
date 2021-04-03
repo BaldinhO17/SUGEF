@@ -12,17 +12,17 @@
     <div id="animalInputs">
         {{ animal_form }}
     </div>
-    <br>
+    <div class="tipo-cadastro">
     <label for="aquisicao" >Aquisição</label>
     <input type="radio" id="aquisicao" name="tipo-cadastro" oninput="toggleForm()" value="aquisicao">
     <label for="nascimento">Nascimento</label>
     <input type="radio" id="nascimento" name="tipo-cadastro" oninput="toggleForm()" value="nascimento">
-    <br>
+    </div>
     <div id="nascimento_inputs" hidden>
         {{ nascimento_form }}
     </div>
     
-    <button type="submit"> Salvar </button>
+    <button type="submit"class="btn btn-outline-success"> Salvar </button>
 </form>
 <script>
     $('document').ready(()=>{
