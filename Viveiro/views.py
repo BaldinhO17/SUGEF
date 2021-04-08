@@ -14,7 +14,7 @@ def acessar(request, permissao, usuario):
     logado = True
     return redirect('viveiro_index')
 
-@login_required
+
 def index(request):
     global logado
     if logado:
@@ -22,7 +22,7 @@ def index(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def alunos(request):
     global logado
     if logado:
@@ -30,7 +30,7 @@ def alunos(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def plantas(request):
     global logado
     if logado:
@@ -38,7 +38,7 @@ def plantas(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def se_carregar_plantas(request):
     global logado
     if logado:
@@ -62,7 +62,7 @@ def se_carregar_plantas(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def se_adicionar_plantas(request):
     global logado
     if logado:
@@ -80,7 +80,7 @@ def se_adicionar_plantas(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def se_editar_plantas(request):
     global logado
     if logado:
@@ -99,7 +99,7 @@ def se_editar_plantas(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def se_apagar_plantas(request):
     global logado
     if logado:
@@ -110,7 +110,7 @@ def se_apagar_plantas(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def se_carregar_visitas(request):
     global logado
     if logado:
@@ -131,7 +131,7 @@ def se_carregar_visitas(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def se_adicionar_visitas(request):
     global logado
     if logado:
@@ -146,7 +146,7 @@ def se_adicionar_visitas(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def se_editar_visitas(request):
     global logado
     if logado:
@@ -162,7 +162,7 @@ def se_editar_visitas(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def se_apagar_visitas(request):
     global logado
     if logado:
@@ -173,7 +173,7 @@ def se_apagar_visitas(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def se_carregar_insumos(request):
     global logado
     if logado:
@@ -195,7 +195,7 @@ def se_carregar_insumos(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def se_adicionar_insumos(request):
     global logado
     if logado:
@@ -211,7 +211,7 @@ def se_adicionar_insumos(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def se_editar_insumos(request):
     global logado
     if logado:
@@ -227,7 +227,7 @@ def se_editar_insumos(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def se_apagar_insumos(request):
     global logado
     if logado:
@@ -238,7 +238,7 @@ def se_apagar_insumos(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def objetos(request):
     global logado
     if logado:
@@ -246,7 +246,7 @@ def objetos(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def turmas(request):
     global logado
     if logado:
@@ -254,7 +254,7 @@ def turmas(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def plantas(request):
     global logado
     if logado:
@@ -262,7 +262,7 @@ def plantas(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def visitas(request):
     global logado
     if logado:
@@ -270,7 +270,7 @@ def visitas(request):
     else:
         return HttpResponseNotFound('É preciso login.')
         
-@login_required
+
 def insumos(request):
     global logado
     if logado:
