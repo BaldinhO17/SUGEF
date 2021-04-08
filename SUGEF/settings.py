@@ -26,7 +26,7 @@ SECRET_KEY = 'f66b)dtmswazenn9$%tli9vq346hz#7l%932s$7c7ls-rok3bu'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['sugef-ifrn.herokuapp.com']
 
 
 # Application definition
