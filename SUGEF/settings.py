@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'f66b)dtmswazenn9$%tli9vq346hz#7l%932s$7c7ls-rok3bu'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = ['sugef-ifrn.herokuapp.com']
+ALLOWED_HOSTS = ['sugef-ifrn.herokuapp.com','.127.0.0.1','localhost', '[::1]']
 
 
 # Application definition
