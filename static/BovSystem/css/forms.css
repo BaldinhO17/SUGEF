@@ -1,0 +1,42 @@
+#form{
+    flex-direction: column;
+    background-color: #f0f0f0;
+    display: flex;
+    padding: 3rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+}
+
+input, button, select, optgroup, textarea {
+    min-height: 2.3rem;
+    margin-bottom: 0.8rem;
+}
+
+	#form{
+    	    text-align: start;
+	}
+
+}
+/* Pagina de cadastro de animais */
+.tipo-cadastro{
+    max-width:50%;
+    display: flex;
+    align-items: center;
+}
+.tipo-cadastro input{
+    margin-left:0.5rem;
+    margin-right:0.8rem;
+}
+#animalInputs input, #animalInputs select, #nascimento_inputs input{
+    margin-left:0.2rem;
+    margin-right:0.4rem;
+}
+
+@media(max-width:1200px){
+	#animalInputs, #nascimento_inputs{
+    	    text-align: start;
+    	    display: flex;
+            flex-direction: column;
+	}
+
+}
