@@ -1,0 +1,194 @@
+{% extends 'Viveiro/janela.html' %}
+
+{% load static %}
+
+{% block breadcrumb %}
+Visitas
+{% endblock %}
+
+{% block modal %}
+<div class="form-group">
+  <label for="especie">Código: </label>
+  <span class="d-none">Por favor, informe o código da visita.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="number" class="form-control" id="cod">
+</div>
+<div class="form-group">
+<div class="form-group">
+  <label for="especie">Data: </label>
+  <span class="d-none">Por favor, informe a data da visita.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="date" class="form-control" id="data">
+</div>
+<div class="form-group">
+  <label for="tipo">Hora: </label>
+  <span class="d-none">Por favor, informe o horário da visita.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="time" class="form-control" id="hora">
+</div>
+<div class="form-group">
+  <label for="quantidade">Visitante: </label>
+  <span class="d-none">Por favor, informe o visitante</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="visitante">
+</div>
+{% endblock %}
+
+{% block tabela %}
+<script>
+  let tabela = $('table').DataTable({
+    ajax: `{% url 'viveiro_se_carregar_visitas' %}`,
+    columns: [
+      { title: 'Código', className: 'all' },
+      { title: 'Data', className: 'all' },
+      { title: 'Hora', className: 'all' },
+      { title: 'Visitante', className: 'all' },
+      { className: 'control', title: `<img src="{% static 'Viveiro/img/expandir.svg' %}">` }
+    ],
+    order: [[1, 'asc']],
+    buttons: [
+      {
+        text: `<img height='11px' src="{% static 'Viveiro/img/adicionar.svg' %}"><br>Adic.`,
+        className: 'btn-outline-success',
+        action: function () {
+          $('.modal-title').text('Adicionar planta')
+          $('form input').removeClass('is-valid is-invalid').prev().removeClass('text-muted').empty()
+          $('#cod').val('')
+          $('#data').val('')
+          $('#hora').val('')
+          $('#visitante').val('')
+          $('#salvar').addClass('disabled')
+          $('.modal').prop('acao', 'adicionar').modal('show')
+        }
+      },
+      {
+        text: `<img height='10px' src="{% static 'Viveiro/img/editar.svg' %}"><br>Editar`,
+        className: 'editar',
+        extend: 'selectedSingle',
+        action: function () {
+          $('.modal-title').text('Editar')
+          $('form input').removeClass('is-valid is-invalid').prev().removeClass('text-muted').empty()
+          $('#cod').val(tabela.row({ selected: true }).data()[0])
+          $('#data').val(tabela.row({ selected: true }).data()[1])
+          $('#hora').val(tabela.row({ selected: true }).data()[2])
+          $('#visitante').val(tabela.row({ selected: true }).data()[3])
+          $('#salvar').addClass('disabled')
+          $('.modal').prop('acao', 'editar').modal('show')
+        }
+      },
+      {
+        text: `<img height='13px' src="{% static 'Viveiro/img/apagar.svg' %}"><br>Apagar`,
+        className: 'apagar',
+        extend: 'selectedSingle',
+        action: function () { apagar() }
+      }
+    ]
+  })
+</script>
+{% endblock %}
+
+{% block validacao %}
+<script>
+  $('form input').on('input', function () {
+    $('#salvar').addClass('disabled')
+    input = $(this).removeClass('is-valid').addClass('is-invalid')
+    valor = input.val()
+    mensagem = input.prev().removeClass('text-muted')
+    
+      switch (input.attr('id')) {
+      case 'data':
+        if (valor == '') {
+          mensagem.text('Por favor informe a data.')
+        } 
+         else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }; break
+        
+      case 'hora':
+        if (valor == '') {
+          mensagem.text('Por favor informe o horário.')
+        }
+         else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }; break
+        
+      case 'visitante':
+        if (valor == '') {
+          mensagem.text('Por favor informe o visitante.')
+        } 
+         else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }
+    }
+    
+    switch ($('.modal').prop('acao')) {
+      case 'adicionar':
+        $('form input').each(function () {
+          input = $(this)
+          valor = input.val()
+          mensagem = input.prev().text()
+          if (valor != '' && mensagem == '') {
+            input.removeClass('is-invalid').addClass('is-valid')
+          }
+        })
+        if ($('.is-valid').length == $('form input').length) {
+          $('#salvar').removeClass('disabled')
+        } break
+      case 'editar':
+        mensagens = false
+        $('form small').each(function () {
+          if ($(this).text() != '') {
+            mensagens = true
+          }
+        })
+        if ($('.is-invalid').length == 0 && !mensagens) {
+          $('#salvar').removeClass('disabled')
+        }
+    }
+  })
+</script>
+{% endblock %}
+
+{% block envio %}
+<script>
+  function adicionar() {
+    valores = {
+      'cod': $('#cod').val(),
+      'data': $('#data').val(),
+      'hora': $('#hora').val(),
+      'visitante': $('#visitante').val()
+      
+    }
+    $.post(`{% url 'viveiro_se_adicionar_visitas' %}`, valores, function () {
+      tabela.ajax.reload(function () {}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+      $('.modal').modal('hide')
+    })
+  }
+  function editar() {
+    valores = {
+      'cod': $('#cod').val(),
+      'data': $('#data').val(),
+      'hora': $('#hora').val(),
+      'visitante': $('#visitante').val()
+    }
+    $.post(`{% url 'viveiro_se_editar_visitas' %}`, valores, function () {
+      tabela.ajax.reload(function () {}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+      $('.modal').modal('hide')
+    })
+  }
+  function apagar() {
+    valores = {
+      'cod': tabela.row({ selected: true }).data()[0]
+    }
+    $.post(`{% url 'viveiro_se_apagar_visitas' %}`, valores, function () {
+      tabela.ajax.reload(function () {}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+    })
+  }
+</script>
+{% endblock %}

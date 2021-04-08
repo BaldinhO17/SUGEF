@@ -1,0 +1,45 @@
+{% extends 'BovSystem/estoque/controle_estoque/base-controle-estoque.html' %}
+
+{% load static %}
+
+
+{% block titulo %} Adicionar {{ tipo }} do Estoque {% endblock %}
+
+
+{% block main %}
+<form method="post" id="form">
+    {% csrf_token %}
+    {{ controle_estoque_form }}
+    {% if tipo == "Entrada" %}
+        <label for="valor"> Gasto: </label>
+        <input type="number" name="valor" id="valor">
+        <input type="hidden" name="gasto">
+    {% endif %}
+    <button type="submit"class="btn btn-outline-success"> Salvar </button>
+</form>
+<script>
+    $('document').ready(()=>{
+        $("#id_data").attr("type","date")
+        $("#id_hora").attr("type","time").attr("step","1")
+        $("#id_gasto").remove()
+        $("label:nth-child(2)").remove()
+        $("#id_tipo").empty()
+        $("#id_tipo").remove()
+        $("#form").prepend('<input type="hidden" name="tipo" id="id_tipo" value="{{ tipo }}">')
+        $("label:nth-child(5)").remove()
+        var materiais=[]
+        {% for material in materiais %}
+            materiais.push([{{material.codigo}},'{{material.nome}}'])
+        {% endfor %}
+        $("#id_material option").each( (i,e) =>{
+            if (i<=(materiais.length-1)){
+                $("#id_material option").eq(i).val(materiais[(i)][0])
+                $("#id_material option").eq(i).text(materiais[(i)][1])
+            }else{
+                e.remove()
+            }
+        })
+    })
+</script>
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'BovSystem/janela.html' %}
+
+{% load static %}
+
+{% block breadcrumb %}
+Secações
+{% endblock %}
+
+{% block modal %}
+
+{% endblock %}
+
+{% block tabela %}
+<script>
+  let tabela = $('table').DataTable({
+    ajax: {
+      url: `{% url 'bovsystem_carregar_secacoes' %}`,
+      type: 'GET',
+      },
+    columns: [
+      { title: 'Código', className: 'all' },
+      { title: 'Matriz', className: 'all' },
+      { title: 'Inicio', className: 'min-desktop' },
+      { title: 'Presença de leite', className: 'min-desktop' },
+      { title: 'Termino', className: 'min-desktop' },
+      { className: 'control', title: `<img src="{% static 'BovSystem/img/expandir.svg' %}">` }
+    ],
+    order: [[0, 'desc']],
+    buttons: [
+    {
+        text: `<img height='11px' src="{% static 'BovSystem/img/adicionar.svg' %}"><br>Adic.`,
+        className: 'btn-outline-success',
+        action: function () {
+          window.location.assign("{% url 'bovsystem_cadastrar_secacao' %}");
+        }
+      },
+      {
+        text: `<img height='10px' src="{% static 'BovSystem/img/editar.svg' %}"><br>Editar`,
+        className: 'editar',
+        extend: 'selectedSingle',
+        action: function () {
+          codigo = tabela.row({ selected: true }).data()[0]
+          url = "/bovsystem/secacoes/"+ codigo +"/editar/"
+          window.location.assign(url);
+        }
+      },
+      {
+        text: `<img height='13px' src="{% static 'BovSystem/img/apagar.svg' %}"><br>Apagar`,
+        className: 'apagar',
+        extend: 'selectedSingle',
+        action: function () {
+          codigo = tabela.row({ selected: true }).data()[0]
+          token = { 'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val() }
+          url = "/bovsystem/secacoes/"+ codigo +"/apagar/"
+          $.post(url, token, function (data) { 
+            if (typeof data.mensagem != "undefined"){
+              alert(data.mensagem)
+            }
+            tabela.ajax.reload(function () {}, false).columns.adjust()
+            $('#resultados').attr('max', tabela.rows().count())
+          })
+        }
+      }
+    ]
+  })
+  {% if mensagem %}
+    $('document').ready(()=>{
+      alert("{{mensagem}}")
+    })
+  {% endif %}
+</script>
+{% csrf_token %}
+{% endblock %}
+
+{% block validacao %}
+<script>
+</script>
+{% endblock %}
+
+{% block envio %}
+<script>
+  
+</script>
+{% endblock %}

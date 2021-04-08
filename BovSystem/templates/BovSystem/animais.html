@@ -1,0 +1,107 @@
+{% extends 'BovSystem/janela.html' %}
+
+{% load static %}
+
+{% block breadcrumb %}
+Animais
+{% endblock %}
+
+{% block modal %}
+
+{% endblock %}
+
+{% block tabela %}
+<script>
+  let tabela = $('table').DataTable({
+    ajax: {
+      url: `{% url 'bovsystem_carregar_animais' %}`,
+      type: 'GET',
+      },
+    columns: [
+      { title: 'Código', className: 'all' },
+      { title: 'Nome', className: 'all' },
+      { title: 'Sexo', className: 'min-desktop' },
+      { title: 'Peso', className: 'min-desktop' },
+      { className: 'control', title: `<img src="{% static 'BovSystem/img/expandir.svg' %}">` }
+    ],
+    order: [[1, 'asc']],
+    buttons: [
+      {
+        text: `<img height='11px' src="{% static 'BovSystem/img/adicionar.svg' %}"><br>Adic.`,
+        className: 'btn-outline-success',
+        action: function () {
+          $('.modal-title').text('Adicionar Animal')
+          $('form input').removeClass('is-valid is-invalid').prev().removeClass('text-muted').empty()
+          $('#codigo').prop('disabled', false).val('')
+          $('#nome').val('')
+          $('#sexo').val('')
+          $('#peso').val('')
+          $('#salvar').addClass('disabled')
+          window.location.assign("{% url 'bovsystem_cadastrar_animal' %}");
+        }
+      },
+      {
+        text: `<img height='10px' src="{% static 'BovSystem/img/editar.svg' %}"><br>Editar`,
+        className: 'editar',
+        extend: 'selectedSingle',
+        action: function () {
+          $('.modal-title').text('Editar Animal')
+          $('form input').removeClass('is-valid is-invalid').prev().removeClass('text-muted').empty()
+          $('#codigo').prop('disabled', true).val(tabela.row({ selected: true }).data()[0])
+          $('#nome').val(tabela.row({ selected: true }).data()[1])
+          $('#sexo').val(tabela.row({ selected: true }).data()[2])
+          $('#peso').val(tabela.row({ selected: true }).data()[3])
+          $('#salvar').addClass('disabled')
+          codigo = tabela.row({ selected: true }).data()[0]
+          url = "/bovsystem/animais/"+ codigo +"/editar/"
+          window.location.assign(url);
+        }
+      },
+      {
+        text: `<img height='13px' src="{% static 'BovSystem/img/apagar.svg' %}"><br>Apagar`,
+        className: 'apagar',
+        extend: 'selectedSingle',
+        action: function () { apagar() }
+      },
+      {
+        text: `<img height='13px' src="{% static 'BovSystem/img/info.svg' %}"><br>Info`,
+        className: 'info',
+        extend: 'selectedSingle',
+        action: function () { info()}
+      }
+    ]
+  })
+  {% if mensagem %}
+    $('document').ready(()=>{
+      alert("{{mensagem}}")
+    })
+  {% endif %}
+</script>
+{% csrf_token %}
+{% endblock %}
+
+{% block validacao %}
+{% endblock %}
+
+{% block envio %}
+<script>
+  function apagar() {
+    codigo = tabela.row({ selected: true }).data()[0]
+    token = { 'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val() }
+    url = "/bovsystem/animais/"+ codigo +"/apagar/"
+    $.post(url, token, function (data) {
+      if (typeof data.mensagem != "undefined"){
+        alert(data.mensagem)
+      }
+      tabela.ajax.reload(function () {}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+    })
+  }
+  function info() {
+    codigo = tabela.row({ selected: true }).data()[0]
+    url = "/bovsystem/animais/"+ codigo +"/mostrar/"
+    window.location.assign(url);
+  }
+  
+</script>
+{% endblock %}

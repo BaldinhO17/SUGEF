@@ -1,0 +1,33 @@
+{% extends 'BovSystem/secacoes/base-secacao.html' %}
+
+{% load static %}
+
+
+{% block titulo %} Adicionar Secação {% endblock %}
+
+
+{% block main %}
+<form method="post" id="form">
+    {% csrf_token %}
+    {{ secacao_form }}
+    <button type="submit"class="btn btn-outline-success"> Salvar </button>
+</form>
+<script>
+    $('document').ready(()=>{
+        var matrizes=[]
+        {% for matriz in matrizes %}
+            matrizes.push([{{matriz.codigo}},'{{matriz.nome}}'])
+        {% endfor %}
+        $("#id_matriz option").each( (i,e) =>{
+            if (i<=(matrizes.length-1)){
+                $("#id_matriz option").eq(i).val(matrizes[(i)][0])
+                $("#id_matriz option").eq(i).text(matrizes[(i)][1])
+            }else{
+                e.remove()
+            }
+        })
+        $("#id_inicio").attr("type","date")
+    })
+</script>
+
+{% endblock %}

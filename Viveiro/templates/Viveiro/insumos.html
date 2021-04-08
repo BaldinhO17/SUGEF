@@ -1,0 +1,210 @@
+{% extends 'Viveiro/janela.html' %}
+
+{% load static %}
+
+{% block breadcrumb %}
+Insumos
+{% endblock %}
+
+{% block modal %}
+<div class="form-group">
+  <label for="tipo">Código: </label>
+  <span class="d-none">Por favor, informe o código do insumo: </span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="number" class="form-control" id="cod">
+</div>
+<div class="form-group">
+  <label for="tipo">Tipo: </label>
+  <span class="d-none">Por favor, informe o tipo do insumo: </span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="tipo">
+</div>
+<div class="form-group">
+  <label for="marca">Marca: </label>
+  <span class="d-none">Por favor, informe a marca do insumo: </span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="marca">
+</div>
+<div class="form-group">
+  <label for="desc">Descrição: </label>
+  <span class="d-none">Por favor, descreva o insumo: </span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="desc">
+</div>
+<div class="form-group">
+  <label for="quantidade">Quantidade: </label>
+  <span class="d-none">Por favor, informe o visitante</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="number" class="form-control" id="quant">
+</div>
+{% endblock %}
+
+{% block tabela %}
+<script>
+  let tabela = $('table').DataTable({
+    ajax: `{% url 'viveiro_se_carregar_insumos' %}`,
+    columns: [
+      { title: 'Código', className: 'all' },
+      { title: 'Tipo', className: 'all' },
+      { title: 'Marca', className: 'all' },
+      { title: 'Descrição', className: 'min-desktop' },
+      { title: 'Quantidade', className: 'all' },
+      { className: 'control', title: `<img src="{% static 'Viveiro/img/expandir.svg' %}">` }
+    ],
+    order: [[1, 'asc']],
+    buttons: [
+      {
+        text: `<img height='11px' src="{% static 'Viveiro/img/adicionar.svg' %}"><br>Adic.`,
+        className: 'btn-outline-success',
+        action: function () {
+          $('.modal-title').text('Adicionar insumo')
+          $('form input').removeClass('is-valid is-invalid').prev().removeClass('text-muted').empty()
+          $('#cod').val('')
+          $('#tipo').val('')
+          $('#marca').val('')
+          $('#desc').val('')
+          $('#quant').val('')
+          $('#salvar').addClass('disabled')
+          $('.modal').prop('acao', 'adicionar').modal('show')
+        }
+      },
+      {
+        text: `<img height='10px' src="{% static 'Viveiro/img/editar.svg' %}"><br>Editar`,
+        className: 'editar',
+        extend: 'selectedSingle',
+        action: function () {
+          $('.modal-title').text('Editar servidor(a)')
+          $('form input').removeClass('is-valid is-invalid').prev().removeClass('text-muted').empty()
+          $('#cod').val(tabela.row({ selected: true }).data()[0])
+          $('#tipo').val(tabela.row({ selected: true }).data()[1])
+          $('#marca').val(tabela.row({ selected: true }).data()[2])
+          $('#desc').val(tabela.row({ selected: true }).data()[3])
+          $('#quant').val(tabela.row({ selected: true }).data()[4])
+          $('#salvar').addClass('disabled')
+          $('.modal').prop('acao', 'editar').modal('show')
+        }
+      },
+      {
+        text: `<img height='13px' src="{% static 'Viveiro/img/apagar.svg' %}"><br>Apagar`,
+        className: 'apagar',
+        extend: 'selectedSingle',
+        action: function () { apagar() }
+      }
+    ]
+  })
+</script>
+{% endblock %}
+
+{% block validacao %}
+<script>
+  $('form input').on('input', function () {
+    $('#salvar').addClass('disabled')
+    input = $(this).removeClass('is-valid').addClass('is-invalid')
+    valor = input.val()
+    mensagem = input.prev().removeClass('text-muted')
+    
+      switch (input.attr('id')) {
+      case 'tipo':
+        if (valor == '') {
+          mensagem.text('Por favor informe o tipo.')
+        } 
+         else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }; break
+        
+      case 'marca':
+        if (valor == '') {
+          mensagem.text('Por favor informe a marca')
+        }
+         else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }; break
+        
+      case 'desc':
+        if (valor == '') {
+          mensagem.text('Por favor informe a descrição')
+        } 
+              
+      case 'quant':
+        if (valor == '') {
+          mensagem.text('Por favor informe a quantidade')
+        }               
+         else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }
+    }
+    
+    switch ($('.modal').prop('acao')) {
+      case 'adicionar':
+        $('form input').each(function () {
+          input = $(this)
+          valor = input.val()
+          mensagem = input.prev().text()
+          if (valor != '' && mensagem == '') {
+            input.removeClass('is-invalid').addClass('is-valid')
+          }
+        })
+        if ($('.is-valid').length == $('form input').length) {
+          $('#salvar').removeClass('disabled')
+        } break
+      case 'editar':
+        mensagens = false
+        $('form small').each(function () {
+          if ($(this).text() != '') {
+            mensagens = true
+          }
+        })
+        if ($('.is-invalid').length == 0 && !mensagens) {
+          $('#salvar').removeClass('disabled')
+        }
+    }
+  })
+</script>
+{% endblock %}
+
+{% block envio %}
+<script>
+  function adicionar() {
+    valores = {
+      'cod': $('#cod').val(),
+      'tipo': $('#tipo').val(),
+      'marca': $('#marca').val(),
+      'desc': $('#desc').val(),
+      'quant': $('#quant').val()
+      
+    }
+    $.post(`{% url 'viveiro_se_adicionar_insumos' %}`, valores, function () {
+      tabela.ajax.reload(function () {}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+      $('.modal').modal('hide')
+    })
+  }
+  function editar() {
+    valores = {
+      'cod': $('#cod').val(),
+      'tipo': $('#tipo').val(),
+      'marca': $('#marca').val(),
+      'desc': $('#desc').val(),
+      'quant': $('#quant').val()
+    }
+    $.post(`{% url 'viveiro_se_editar_insumos' %}`, valores, function () {
+      tabela.ajax.reload(function () {}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+      $('.modal').modal('hide')
+    })
+  }
+  function apagar() {
+    valores = {
+      'cod': tabela.row({ selected: true }).data()[0]
+        
+    }
+    $.post(`{% url 'viveiro_se_apagar_insumos' %}`, valores, function () {
+      tabela.ajax.reload(function () {}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+    })
+  }
+</script>
+{% endblock %}

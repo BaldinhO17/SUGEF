@@ -1,0 +1,151 @@
+{% extends 'OvinoSystem/base.html' %}
+
+{% load static %}
+
+{% block css %}
+<style>
+  .navbar {
+    position: absolute;
+    width: 100%;
+  }
+
+  .d-flex {
+    height: 100vh;
+  }
+
+  .dropdown-toggle::after {
+    margin-left: 0px;
+  }
+
+  img {
+    height: 60px;
+  }
+
+  @media (max-width: 1225px) {
+    .navbar {
+      position: unset;
+    }
+
+    .d-flex {
+      height: unset;
+    }
+
+    .row.mx-auto.mb-3 {
+      margin-top: 2rem;
+      margin-bottom: 2rem !important;
+    }
+
+    .col-sm.mx-5 {
+      margin: 0px !important;
+      padding: 0px;
+    }
+
+    p {
+      margin: 0 4rem;
+    }
+
+    #tabelas .card {
+      margin-top: 2rem;
+      border-radius: 0px;
+    }
+
+    #tabelas .card span {
+      font-weight: bold;
+    }
+
+    #tabelas .card-body a {
+      padding: 12px;
+    }
+
+    .row.text-center.mx-5.mt-3 {
+      margin-top: 2.5rem !important;
+      margin-bottom: 1rem;
+    }
+
+    .row.text-center.mx-5.mt-3 .card {
+      margin-bottom: 2.5rem;
+    }
+
+    img {
+      height: 70px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block conteudo %}
+<div class="d-flex align-items-center">
+
+  <div class="container p-0 text-center">
+
+    <div class="row mx-auto mb-3">
+      <div class="col-sm mx-5">
+        <h1>OvinoSystem</h1>
+        <p>Sistema de gerenciamento de ovinos e caprinos</p>
+        
+      </div>
+    </div>
+
+    <div class="row text-center mx-5 mt-3">
+      <div class="col-sm-4">
+        <div class="card">
+          <a href="{% url 'ovinosystem_doenca' %}" class="btn btn-lg btn-outline-primary">Doença</a>
+          <div class="card-body">
+            <h5 class="card-title"></h5>
+            <h6 class="card-subtitle text-muted">Gerenciar doenças</h6>
+          </div>
+          <img class="d-block w-100 mb-4" src="{% static 'OvinoSystem/img/doença.svg' %}">
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="card">
+          <a href="{% url 'ovinosystem_animais' %}" class="btn btn-lg btn-outline-primary">Animais</a>
+          <div class="card-body">
+            <h5 class="card-title"></h5>
+            <h6 class="card-subtitle text-muted">Gerenciar animais</h6>
+          </div>
+          <img class="d-block w-100 mb-4" src="{% static 'OvinoSystem/img/goat.svg' %}">
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="card">
+          <a href="{% url 'ovinosystem_estoque' %}" class="btn btn-lg btn-outline-primary">Estoque</a>
+          <div class="card-body">
+            <h5 class="card-title"></h5>
+            <h6 class="card-subtitle text-muted">Administrar estoque</h6>
+          </div>
+          <img class="d-block w-100 mb-4" src="{% static 'OvinoSystem/img/estoque.svg' %}">
+        </div>
+      </div>
+    </div>
+
+    <!-- SEGUNDA LINHA -->
+
+    <div class="row text-center mx-5 mt-3">
+      <div class="col-sm-6">
+        <div class="card">
+          <a href="{% url 'ovinosystem_vincular_doenca' %}" class="btn btn-lg btn-outline-primary">Vincular doença</a>
+          <div class="card-body">
+            <h5 class="card-title"></h5>
+            <h6 class="card-subtitle text-muted">Vincular doença a um animal</h6>
+          </div>
+          <img class="d-block w-100 mb-4" src="{% static 'OvinoSystem/img/vinculardoença.svg' %}">
+        </div>
+      </div> 
+      <div class="col-sm-6">
+        <div class="card">
+          <a href="{% url 'ovinosystem_saida' %}"" class="btn btn-lg btn-outline-primary">Administrar saída</a>
+          <div class="card-body">
+            <h5 class="card-title"></h5>
+            <h6 class="card-subtitle text-muted">Administrar as saídas dos animais</h6>
+          </div>
+          <img class="d-block w-100 mb-4" src="{% static 'OvinoSystem/img/saida.svg' %}">
+        </div>
+      </div>   
+    </div>
+    <div>Icons made by <a href="https://www.flaticon.com/authors/icongeek26" title="Icongeek26">Icongeek26</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,79 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <title>SUGEF</title>
+  <link rel="shortcut icon" href="{% static 'Viveiro/img/favicon.ico' %}">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" type="text/css" href="{% static 'Viveiro/css/bootstrap.lumen.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'Viveiro/css/datatables.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'Viveiro/css/flexdatalist.min.css' %}">
+
+  <style>
+    html {
+      cursor: default;
+    }
+
+    .navbar {
+      z-index: 1;
+    }
+
+    .navbar-brand {
+      width: 38px;
+    }
+
+    .navbar img {
+      height: 25px;
+    }
+
+    @media (max-width: 1225px) {
+      .navbar small {
+        display: none;
+      }
+    }
+  </style>
+
+  {% block css %}
+  {% endblock %}
+
+</head>
+
+<body>
+
+  <nav class="navbar navbar-light bg-dark py-0 px-1">
+    <div class="navbar-brand mr-0">
+      <a href="/sugef_app/inicio/" class="text-decoration-none">
+        <img src="{% static 'Viveiro/img/favicon.ico' %}" class="d-inline-block align-center">
+        <small class="ml-1 font-weight-bold">
+          <span class="text-light">Ipanguaçu</span>
+        </small>
+      </a>
+    </div>
+    <span class="font-weight-bold text-light">
+      {% if  hora < 12 %}
+      Bom dia,
+      {% elif hora < 18 %}
+      Boa tarde,
+      {% else %}
+      Boa noite,
+      {% endif %}
+      <span class="text-warning">{{ user.first_name }}</span>!
+    </span>
+    <a href="/" class="btn btn-danger btn-sm">Sair</a>
+  </nav>
+
+  {% block conteudo %}
+  {% endblock %}
+
+  <script src="{% static 'Viveiro/js/jquery.min.js' %}"></script>
+  <script src="{% static 'Viveiro/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'Viveiro/js/datatables.min.js' %}"></script>
+  <script src="{% static 'Viveiro/js/flexdatalist.min.js' %}"></script>
+
+</body>
+
+</html>

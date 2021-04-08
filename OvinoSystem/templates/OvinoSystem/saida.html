@@ -1,0 +1,171 @@
+{% extends 'OvinoSystem/janela.html' %}
+
+{% load static %}
+
+{% block breadcrumb %}
+Gerenciar saída
+{% endblock %}
+
+{% block modal %}
+<div class="form-group">
+  <label for="codigo">Brinco:</label>
+  <span class="d-none">Por favor informe um brinco.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="codigo">
+</div>
+<div class="form-group">
+  <label for="nome">Motivo:</label>
+  <span class="d-none">Por favor informe um nome.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="motivo">
+</div>
+<div class="form-group">
+  <label for="descricao">Data da saída:</label>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="date" class="form-control" id="saida">
+</div>
+{% endblock %}
+
+{% block tabela %}
+{% csrf_token %}
+<script>
+  let tabela = $('table').DataTable({
+    ajax: `{% url 'ovinosystem_carregar_saida' %}`,
+    columns: [
+      { title: 'Brinco', className: 'all' },
+      { title: 'Motivo', className: 'all' },
+      { title: 'Data', className: 'all' },
+      { className: 'control', title: `<img src="{% static 'OvinoSystem/img/expandir.svg' %}">` }
+    ],
+    order: [[1, 'asc']],
+    buttons: [
+      {
+        text: `<img height='11px' src="{% static 'OvinoSystem/img/adicionar.svg' %}"><br>Adic.`,
+        className: 'btn-outline-success',
+        action: () =>{
+          $('.modal-title').text('Adicionar Saída')
+          $('form input').removeClass('is-valid is-invalid').prev().removeClass('text-muted').empty()
+          $('#codigo').val('')
+          $('#motivo').val('')
+          $('#saida').val('')
+          $('#salvar').addClass('disabled')
+          $('.modal').prop('acao', 'adicionar').modal('show')
+        }
+      },
+      {
+        text: `<img height='10px' src="{% static 'OvinoSystem/img/editar.svg' %}"><br>Editar`,
+        className: 'editar',
+        extend: 'selectedSingle',
+        action: () =>{
+          $('.modal-title').text('Editar Saída')
+          $('form input').removeClass('is-valid is-invalid').prev().removeClass('text-muted').empty()
+          $('#codigo').val(tabela.row({ selected: true }).data()[0])
+          $('#motivo').val(tabela.row({ selected: true }).data()[1])
+          $('#saida').val(tabela.row({ selected: true }).data()[2])
+          $('#salvar').addClass('disabled')
+          $('.modal').prop('acao', 'editar').modal('show')
+        }
+      },
+      {
+        text: `<img height='13px' src="{% static 'OvinoSystem/img/apagar.svg' %}"><br>Apagar`,
+        className: 'apagar',
+        extend: 'selectedSingle',
+        action: () =>{ apagar() }
+      }
+    ]
+  })
+</script>
+{% endblock %}
+
+{% block validacao %}
+<script>
+  $('form input').on('input', function () {
+    $('#salvar').addClass('disabled')
+    input = $(this).removeClass('is-valid').addClass('is-invalid')
+    valor = input.val()
+    mensagem = input.prev().removeClass('text-muted')
+    switch (input.attr('id')) {
+      case 'codigo':
+        chave = tabela.column(0).data().toArray()
+        if (valor == '') {
+          mensagem.text('Por favor informe um brinco.')
+        } else if (valor.match(/^[0-9]+$/) == null) {
+          mensagem.text('Somente números.')
+        } else if (chave.includes(valor)) {
+          mensagem.text('Este brinco já existe.')
+        } else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }; 
+    }
+    switch ($('.modal').prop('acao')) {
+      case 'adicionar':
+        $('form input').each(() =>{
+          input = $(this)
+          valor = input.val()  
+          mensagem = input.prev().text()
+          if (valor != '' && mensagem == '') {
+            input.removeClass('is-invalid').addClass('is-valid')
+          }
+        })
+        if ($('.is-valid').length == $('form input').length) {
+          $('#salvar').removeClass('disabled')
+        } break
+      case 'editar':
+        mensagens = false
+        $('form small').each(() =>{
+          if ($(this).text() != '') {
+            mensagens = true
+          }
+        })
+        if ($('.is-invalid').length == 0 && !mensagens) {
+          $('#salvar').removeClass('disabled')
+        }
+    }
+  })
+</script>
+{% endblock %}
+
+{% block envio %}
+<script>
+  function adicionar() {
+    valores = {
+      'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
+      'codigo': $('#codigo').val(),
+      'motivo': $('#motivo').val(),
+      'saida': $('#saida').val(),
+      'modelo': 'S'
+    }
+    $.post(`{% url 'ovinosystem_adicionar' %}`, valores, () =>{
+      tabela.ajax.reload(() =>{}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+      $('.modal').modal('hide')
+    })
+  }
+  function editar() {
+    valores = {
+      'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
+      'codigo': $('#codigo').val(),
+      'motivo': $('#motivo').val(),
+      'saida': $('#saida').val(),
+      'modelo': 'S'
+    }
+    $.post(`{% url 'ovinosystem_adicionar' %}`, valores, () =>{
+      tabela.ajax.reload(() =>{}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+      $('.modal').modal('hide')
+    })
+  }
+  function apagar() {
+    valores = {
+      'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
+      'codigo': tabela.row({ selected: true }).data()[0],
+      'modelo': 'S'
+    }
+    $.post(`{% url 'ovinosystem_apagar' %}`, valores, () =>{
+      tabela.ajax.reload(() =>{}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+    })
+  }
+</script>
+{% endblock %}

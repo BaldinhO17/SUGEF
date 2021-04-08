@@ -14,7 +14,7 @@ hora = timezone.now().hour - 3
 nome = ''
 logado = False
 setor = "Bovinocultura"
-permissao = "Visitante"
+permissao_setor = "Visitante"
 
 def setLogado(request):
     global logado
@@ -23,10 +23,10 @@ def setLogado(request):
 def login(request):
     global logado
     logado = False
-    return render(request, 'login.html', {})
+    return render(request, 'BovSystem/login.html', {})
 
 def validacao(request):
-    global logado, nome, setor, permissao
+    global logado, nome, setor, permissao_setor
     if not logado:
         login = request.POST["username"]
         senha = request.POST["pass"]
@@ -36,95 +36,105 @@ def validacao(request):
                 setLogado(request)
                 nome = user.nome
                 permissao = Acessa.objects.filter(usuario=user.id, setor='Bovinocultura')[0].permissao
-                return redirect('index')
+                return redirect('bovsystem_index')
         else:
-            return render(request, 'login.html', {'mensagem':"Usuário ou senha incorretos"})
+            return render(request, 'BovSystem/login.html', {'mensagem':"Usuário ou senha incorretos"})
     else:
-        return redirect('login')
+        return redirect('bovsystem_login')
+
+
+def acessar(request, permissao, usuario):
+    global  logado, nome, permissao_setor
+    logado = True
+    nome = usuario
+    permissao_setor = permissao
+    return redirect('bovsystem_index')
+
+
 
 def erro(request):
     erro = 'É preciso o login para acessar esta página'
-    return render(request, 'erro.html', {'erro': erro})
+    return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def index(request):
     global logado
     if logado:
-        return render(request, 'index.html', {'hora':hora, 'nome':nome})
+        return render(request, 'BovSystem/index.html', {'hora':hora, 'nome':nome})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def animais(request):
     global logado
     if logado:
-        return render(request, 'animais.html', {'hora':hora, 'nome':nome})
+        return render(request, 'BovSystem/animais.html', {'hora':hora, 'nome':nome})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def coberturas(request):
     global logado
     if logado:
-        return render(request, 'coberturas.html', {'hora':hora, 'nome':nome})
+        return render(request, 'BovSystem/coberturas.html', {'hora':hora, 'nome':nome})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def registros_financeiros(request):
     global logado
     if logado:
-        return render(request, 'registros_financeiros.html', {'hora':hora, 'nome':nome})
+        return render(request, 'BovSystem/registros_financeiros.html', {'hora':hora, 'nome':nome})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def secacoes(request):
     global logado
     if logado:
-        return render(request, 'secacoes.html', {'hora':hora, 'nome':nome})
+        return render(request, 'BovSystem/secacoes.html', {'hora':hora, 'nome':nome})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def estoque(request):
     global logado
     if logado:
-        return render(request, 'estoque.html', {'hora':hora, 'nome':nome})
+        return render(request, 'BovSystem/estoque.html', {'hora':hora, 'nome':nome})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def controle_estoque(request):
     global logado
     if logado:
-        return render(request, 'estoque/controle_estoque.html', {'hora':hora, 'nome':nome})
+        return render(request, 'BovSystem/estoque/controle_estoque.html', {'hora':hora, 'nome':nome})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def gestacoes(request):
     global logado
     if logado:
-        return render(request, 'gestacoes.html', {'hora':hora, 'nome':nome})
+        return render(request, 'BovSystem/gestacoes.html', {'hora':hora, 'nome':nome})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def producoes_de_leite(request):
     global logado
     if logado:
-        return render(request, 'producoes_de_leite.html', {'hora':hora, 'nome':nome})
+        return render(request, 'BovSystem/producoes_de_leite.html', {'hora':hora, 'nome':nome})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def saidas_de_leite(request):
     global logado
     if logado:
-        return render(request, 'saidas_de_leite.html', {'hora':hora, 'nome':nome})
+        return render(request, 'BovSystem/saidas_de_leite.html', {'hora':hora, 'nome':nome})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 # ------ Funções da página Animal ------
 
@@ -147,12 +157,12 @@ def carregar_animais(request):
         return JsonResponse(resposta)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def cadastrar_animal(request):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             machos=Animal.objects.filter(sexo="Masculino")
             femeas=Animal.objects.filter(sexo="Feminino")
             animal_form = AnimalForm(dict(list(request.POST.items())[1:6]) or None)
@@ -166,7 +176,7 @@ def cadastrar_animal(request):
                     nascimento_form.save()
 
                 if ((request.POST['tipo-cadastro']!='nascimento') or (nascimento_form.is_valid())):
-                    return redirect('animais')
+                    return redirect('bovsystem_animais')
             data={
                 'machos':machos,
                 'femeas':femeas,
@@ -175,37 +185,37 @@ def cadastrar_animal(request):
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'animais/cadastrar_animal.html', data)
+            return render(request, 'BovSystem/animais/cadastrar_animal.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'animais.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/animais.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def editar_animal(request, codigo):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             animal = Animal.objects.get(codigo=codigo)
             form = AnimalForm(request.POST or None, instance=animal)
 
             if form.is_valid():
                 form.save()
-                return redirect('animais')
+                return redirect('bovsystem_animais')
 
-            return render(request, 'animais/editar_animal.html', {'form':form,'animal': animal, 'hora':hora, 'nome':nome})
+            return render(request, 'BovSystem/animais/editar_animal.html', {'form':form,'animal': animal, 'hora':hora, 'nome':nome})
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'animais.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/animais.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def apagar_animal(request, codigo):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Administrador':
+        if permissao_setor == 'Administrador':
             animal = Animal.objects.get(codigo=codigo)
             animal.delete()
             return HttpResponse('')
@@ -214,7 +224,7 @@ def apagar_animal(request, codigo):
             return JsonResponse(mensagem)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def mostrar_animal(request, codigo):
     global logado
@@ -272,15 +282,15 @@ def mostrar_animal(request, codigo):
             'nome':nome
         }
 
-        return render(request, 'animais/mostrar_animal.html', data)
+        return render(request, 'BovSystem/animais/mostrar_animal.html', data)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def cadastrar_nascimento(request, data_nasc=False):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             animal_form = AnimalForm(request.POST or None)
             if animal_form.is_valid():
                 animal_form.save()
@@ -292,20 +302,20 @@ def cadastrar_nascimento(request, data_nasc=False):
                         gestacao.save()
                         nascimento.save()
 
-                return render(request, 'animais.html', {'hora':hora, 'nome':nome})
+                return render(request, 'BovSystem/animais.html', {'hora':hora, 'nome':nome})
             data={
                 'data_nasc':data_nasc,
                 'animal_form':animal_form,
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'nascimentos/cadastrar_nascimento.html', data)
+            return render(request, 'BovSystem/nascimentos/cadastrar_nascimento.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'coberturas.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/coberturas.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 # ------ Funções da página cobertura ------
 
@@ -330,18 +340,18 @@ def carregar_coberturas(request):
         return JsonResponse(resposta)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def cadastrar_cobertura(request):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             machos=Animal.objects.filter(sexo="Masculino")
             femeas=Animal.objects.filter(sexo="Feminino")
             cobertura_form = CoberturaForm(request.POST or None)
             if cobertura_form.is_valid():
                 cobertura_form.save()
-                return redirect('coberturas')
+                return redirect('bovsystem_coberturas')
             data={
                 'machos':machos,
                 'femeas':femeas,
@@ -349,18 +359,18 @@ def cadastrar_cobertura(request):
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'coberturas/cadastrar_cobertura.html', data)
+            return render(request, 'BovSystem/coberturas/cadastrar_cobertura.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'coberturas.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/coberturas.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def editar_cobertura(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             machos=Animal.objects.filter(sexo="Masculino")
             femeas=Animal.objects.filter(sexo="Feminino")
             cobertura = Cobertura.objects.get(id=id)
@@ -368,7 +378,7 @@ def editar_cobertura(request, id):
 
             if form.is_valid():
                 form.save()
-                return redirect('coberturas')
+                return redirect('bovsystem_coberturas')
 
             data={
                 'machos':machos,
@@ -378,18 +388,18 @@ def editar_cobertura(request, id):
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'coberturas/editar_cobertura.html', data)
+            return render(request, 'BovSystem/coberturas/editar_cobertura.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'coberturas.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/coberturas.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def apagar_cobertura(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Administrador':
+        if permissao_setor == 'Administrador':
             cobertura = Cobertura.objects.get(id=id)
             cobertura.delete()
             return HttpResponse('')
@@ -398,12 +408,12 @@ def apagar_cobertura(request, id):
             return JsonResponse(mensagem)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def concluir_cobertura(request, id, termino, gestacao):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             cobertura = Cobertura.objects.get(id=id)
             cobertura.ativa = False
             cobertura.termino = termino
@@ -412,17 +422,17 @@ def concluir_cobertura(request, id, termino, gestacao):
                 for gestacao_anterior in gestacoes:
                     if gestacao_anterior.ativa:
                         mensagem = ""+cobertura.femea.nome+" já tem gestação em andamento!"
-                        return render(request, 'coberturas.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+                        return render(request, 'BovSystem/coberturas.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
                 gestacao = Gravidez(inicio=cobertura.termino, animal=cobertura.femea, cobertura=cobertura, ativa=True)
                 gestacao.save()
             cobertura.save()
-            return redirect('coberturas')
+            return redirect('bovsystem_coberturas')
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'coberturas.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/coberturas.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 # ------ Funções da página Registros Financeiro ------
 
@@ -446,39 +456,39 @@ def carregar_registros_financeiros(request):
         return JsonResponse(resposta)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def cadastrar_registro_financeiro(request):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             registro_financeiro_form = Registro_FinanceiroForm(request.POST or None)
             if registro_financeiro_form.is_valid():
                 registro_financeiro_form.save()
-                return redirect('registros_financeiros')
+                return redirect('bovsystem_registros_financeiros')
             data={
                 'registro_financeiro_form':registro_financeiro_form,
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'registros_financeiros/cadastrar_registro_financeiro.html', data)
+            return render(request, 'BovSystem/registros_financeiros/cadastrar_registro_financeiro.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'registros_financeiros.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/registros_financeiros.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def editar_registro_financeiro(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             registro_financeiro = Registro_Financeiro.objects.get(id=id)
             form = Registro_FinanceiroForm(request.POST or None, instance=registro_financeiro)
 
             if form.is_valid():
                 form.save()
-                return redirect('registros_financeiros')
+                return redirect('bovsystem_registros_financeiros')
 
             data={
                 'form':form,
@@ -486,18 +496,18 @@ def editar_registro_financeiro(request, id):
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'registros_financeiros/editar_registro_financeiro.html', data)
+            return render(request, 'BovSystem/registros_financeiros/editar_registro_financeiro.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'registros_financeiros.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/registros_financeiros.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def apagar_registro_financeiro(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Administrador':
+        if permissao_setor == 'Administrador':
             registro_financeiro = Registro_Financeiro.objects.get(id=id)
             registro_financeiro.delete()
             return HttpResponse('')
@@ -506,7 +516,7 @@ def apagar_registro_financeiro(request, id):
             return JsonResponse(mensagem)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 
 # ------ Funções da página Estoque ------
@@ -531,39 +541,39 @@ def carregar_estoque(request):
         return JsonResponse(resposta)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def cadastrar_material(request):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             material_form = MaterialForm(request.POST or None)
             if material_form.is_valid():
                 material_form.save()
-                return redirect('estoque')
+                return redirect('bovsystem_estoque')
             data={
                 'material_form':material_form,
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'estoque/cadastrar_material.html', data)
+            return render(request, 'BovSystem/estoque/cadastrar_material.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'estoque.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/estoque.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def editar_material(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             material = Material.objects.get(id=id)
             form = MaterialForm(request.POST or None, instance=material)
 
             if form.is_valid():
                 form.save()
-                return redirect('estoque')
+                return redirect('bovsystem_estoque')
 
             data={
                 'form':form,
@@ -571,18 +581,18 @@ def editar_material(request, id):
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'estoque/editar_material.html', data)
+            return render(request, 'BovSystem/estoque/editar_material.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'estoque.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/estoque.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def apagar_material(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Administrador':
+        if permissao_setor == 'Administrador':
             material = Material.objects.get(id=id)
             material.delete()
             return HttpResponse('')
@@ -591,7 +601,7 @@ def apagar_material(request, id):
             return JsonResponse(mensagem)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 # ------ Funções do Controle Estoque ----
 
@@ -618,12 +628,12 @@ def carregar_controle_estoque(request):
         return JsonResponse(resposta)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def cadastrar_entrada_estoque(request):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             materiais = Material.objects.all()
             if ("valor" in request.POST) and ("data" in request.POST) and ("hora" in request.POST):
                 material = Material.objects.get(id=request.POST["material"])
@@ -636,7 +646,7 @@ def cadastrar_entrada_estoque(request):
                 controle_estoque_form.save()
                 material.quantidade+=int(request.POST["quantidade"])
                 material.save()
-                return redirect('controle_estoque')
+                return redirect('bovsystem_controle_estoque')
             data={
                 'materiais':materiais,
                 'tipo':"Entrada",
@@ -644,23 +654,23 @@ def cadastrar_entrada_estoque(request):
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'estoque/controle_estoque/cadastrar_controle_estoque.html', data)
+            return render(request, 'BovSystem/estoque/controle_estoque/cadastrar_controle_estoque.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'estoque/controle_estoque.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/estoque/controle_estoque.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def cadastrar_saida_estoque(request):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             materiais = Material.objects.all()
             controle_estoque_form = Entrada_Saida_EstoqueForm(request.POST or None)
             if controle_estoque_form.is_valid():
                 controle_estoque_form.save()
-                return redirect('controle_estoque')
+                return redirect('bovsystem_controle_estoque')
             data={
                 'materiais':materiais,
                 'tipo':"Saida",
@@ -668,25 +678,25 @@ def cadastrar_saida_estoque(request):
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'estoque/controle_estoque/cadastrar_controle_estoque.html', data)
+            return render(request, 'BovSystem/estoque/controle_estoque/cadastrar_controle_estoque.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'estoque/controle_estoque.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/estoque/controle_estoque.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def editar_controle_estoque(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             materiais = Material.objects.all()
             controle_estoque = Entrada_Saida_Estoque.objects.get(id=id)
             form = Entrada_Saida_EstoqueForm(request.POST or None, instance=controle_estoque)
 
             if form.is_valid():
                 form.save()
-                return redirect('controle_estoque')
+                return redirect('bovsystem_controle_estoque')
 
             data={
                 'materiais':materiais,
@@ -695,18 +705,18 @@ def editar_controle_estoque(request, id):
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'estoque/controle_estoque/editar_controle_estoque.html', data)
+            return render(request, 'BovSystem/estoque/controle_estoque/editar_controle_estoque.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'estoque/controle_estoque.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/estoque/controle_estoque.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def apagar_controle_estoque(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Administrador':
+        if permissao_setor == 'Administrador':
             controle_estoque = Entrada_Saida_Estoque.objects.get(id=id)
             controle_estoque.delete()
             return HttpResponse('')
@@ -715,7 +725,7 @@ def apagar_controle_estoque(request, id):
             return JsonResponse(mensagem)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 # ------ Funções da página Gestação ------
 
@@ -787,12 +797,12 @@ def carregar_gestacoes(request):
         return JsonResponse(resposta)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def cadastrar_gestacao(request):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             coberturas=Cobertura.objects.filter(ativa=True)
             gestacao_form = GravidezForm(request.POST or None)
             if gestacao_form.is_valid():
@@ -807,38 +817,38 @@ def cadastrar_gestacao(request):
                             'hora':hora,
                             'nome':nome
                         }
-                        return render(request, 'gestacoes/cadastrar_gestacao.html', data)
+                        return render(request, 'BovSystem/gestacoes/cadastrar_gestacao.html', data)
                 cobertura = Cobertura.objects.get(id=request.POST['cobertura'])
                 cobertura.ativa = False
                 cobertura.termino = request.POST['inicio']
                 cobertura.save()
                 gestacao_form.save()
-                return redirect('gestacoes')
+                return redirect('bovsystem_gestacoes')
             data={
                 'coberturas':coberturas,
                 'gestacao_form':gestacao_form,
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'gestacoes/cadastrar_gestacao.html', data)
+            return render(request, 'BovSystem/gestacoes/cadastrar_gestacao.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'gestacoes.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/gestacoes.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def editar_gestacao(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             animais=Animal.objects.filter(sexo="Feminino")
             gestacao = Gravidez.objects.get(id=id)
             form = GravidezForm(request.POST or None, instance=gestacao)
 
             if form.is_valid():
                 form.save()
-                return redirect('gestacoes')
+                return redirect('bovsystem_gestacoes')
 
             data={
                 'animais':animais,
@@ -847,18 +857,18 @@ def editar_gestacao(request, id):
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'gestacoes/editar_gestacao.html', data)
+            return render(request, 'BovSystem/gestacoes/editar_gestacao.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'gestacoes.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/gestacoes.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def apagar_gestacao(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Administrador':
+        if permissao_setor == 'Administrador':
             gestacao = Gravidez.objects.get(id=id)
             gestacao.delete()
             return HttpResponse('')
@@ -867,22 +877,22 @@ def apagar_gestacao(request, id):
             return JsonResponse(mensagem)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def concluir_gestacao(request, id, termino):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             gestacao = Gravidez.objects.get(id=id)
             gestacao.ativa = False
             gestacao.save()
             return HttpResponse(cadastrar_nascimento(request, termino))
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'gestacoes.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/gestacoes.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 
 # ------ Funções da página Secações ------
@@ -908,44 +918,44 @@ def carregar_secacoes(request):
         return JsonResponse(resposta)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def cadastrar_secacao(request):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             matrizes=Animal.objects.filter(sexo="Feminino")
             secacao_form = SecacaoForm(request.POST or None)
             secacao_form.fields["leite"].label = "Presença de leite"
             print(secacao_form.fields)
             if secacao_form.is_valid():
                 secacao_form.save()
-                return redirect('secacoes')
+                return redirect('bovsystem_secacoes')
             data={
                 'matrizes':matrizes,
                 'secacao_form':secacao_form,
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'secacoes/cadastrar_secacao.html', data)
+            return render(request, 'BovSystem/secacoes/cadastrar_secacao.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'secacoes.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/secacoes.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def editar_secacao(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             matrizes=Animal.objects.filter(sexo="Feminino")
             secacao = Secacao.objects.get(id=id)
             form = SecacaoForm(request.POST or None, instance=secacao)
 
             if form.is_valid():
                 form.save()
-                return redirect('secacoes')
+                return redirect('bovsystem_secacoes')
 
             data={
                 'matrizes':matrizes,
@@ -954,18 +964,18 @@ def editar_secacao(request, id):
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'secacoes/editar_secacao.html', data)
+            return render(request, 'BovSystem/secacoes/editar_secacao.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'secacoes.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/secacoes.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def apagar_secacao(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Administrador':
+        if permissao_setor == 'Administrador':
             secacao = Secacao.objects.get(id=id)
             secacao.delete()
             return HttpResponse('')
@@ -974,7 +984,7 @@ def apagar_secacao(request, id):
             return JsonResponse(mensagem)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 # ------ Funções da página Produção de Leite ------
 
@@ -997,42 +1007,42 @@ def carregar_producoes_de_leite(request):
         return JsonResponse(resposta)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def cadastrar_producao_de_leite(request):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             femeas=Animal.objects.filter(sexo="Feminino")
             producao_de_leite_form = Produc_leiteForm(request.POST or None)
             if producao_de_leite_form.is_valid():
                 producao_de_leite_form.save()
-                return redirect('producoes_de_leite')
+                return redirect('bovsystem_producoes_de_leite')
             data={
                 'femeas':femeas,
                 'producao_de_leite_form':producao_de_leite_form,
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'producoes_de_leite/cadastrar_producao_de_leite.html', data)
+            return render(request, 'BovSystem/producoes_de_leite/cadastrar_producao_de_leite.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'producoes_de_leite.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/producoes_de_leite.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def editar_producao_de_leite(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             femeas=Animal.objects.filter(sexo="Feminino")
             producao_de_leite = Produc_leite.objects.get(id=id)
             form = Produc_leiteForm(request.POST or None, instance=producao_de_leite)
 
             if form.is_valid():
                 form.save()
-                return redirect('producoes_de_leite')
+                return redirect('bovsystem_producoes_de_leite')
 
             data={
                 'femeas':femeas,
@@ -1041,18 +1051,18 @@ def editar_producao_de_leite(request, id):
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'producoes_de_leite/editar_producao_de_leite.html', data)
+            return render(request, 'BovSystem/producoes_de_leite/editar_producao_de_leite.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'producoes_de_leite.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/producoes_de_leite.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def apagar_producao_de_leite(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Administrador':
+        if permissao_setor == 'Administrador':
             producao_de_leite = Produc_leite.objects.get(id=id)
             producao_de_leite.delete()
             return HttpResponse('')
@@ -1061,16 +1071,16 @@ def apagar_producao_de_leite(request, id):
             return JsonResponse(mensagem)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def graficos_producoes_de_leite(request):
     global logado
     if logado:
         femeas=Animal.objects.filter(sexo="Feminino")
-        return render(request, 'producoes_de_leite/graficos_producoes_de_leite.html', {'hora':hora, 'nome':nome, 'femeas':femeas})
+        return render(request, 'BovSystem/producoes_de_leite/graficos_producoes_de_leite.html', {'hora':hora, 'nome':nome, 'femeas':femeas})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def carregar_graficos_producoes_de_leite(request, femea, inicio, fim):
     global logado
@@ -1088,7 +1098,7 @@ def carregar_graficos_producoes_de_leite(request, femea, inicio, fim):
         return JsonResponse(resposta)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 # ------ Funções da página Saídas de Leite ------
 
@@ -1114,40 +1124,40 @@ def carregar_saidas_de_leite(request):
         return JsonResponse(resposta)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def cadastrar_saida_de_leite(request):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             saida_de_leite_form = Saida_LeiteForm(request.POST or None)
             if saida_de_leite_form.is_valid():
                 saida_de_leite_form.save()
-                return redirect('saidas_de_leite')
+                return redirect('bovsystem_saidas_de_leite')
             data={
                 'saida_de_leite_form':saida_de_leite_form,
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'saidas_de_leite/cadastrar_saida_de_leite.html', data)
+            return render(request, 'BovSystem/saidas_de_leite/cadastrar_saida_de_leite.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'saidas_de_leite.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/saidas_de_leite.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def editar_saida_de_leite(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Bolsista' or permissao == 'Administrador':
+        if permissao_setor == 'Bolsista' or permissao_setor == 'Administrador':
             animais=Animal.objects.filter(sexo="Feminino")
             saida_de_leite = Saida_Leite.objects.get(id=id)
             form = Saida_LeiteForm(request.POST or None, instance=saida_de_leite)
 
             if form.is_valid():
                 form.save()
-                return redirect('saidas_de_leite')
+                return redirect('bovsystem_saidas_de_leite')
 
             data={
                 'form':form,
@@ -1155,18 +1165,18 @@ def editar_saida_de_leite(request, id):
                 'hora':hora,
                 'nome':nome
                 }
-            return render(request, 'saidas_de_leite/editar_saida_de_leite.html', data)
+            return render(request, 'BovSystem/saidas_de_leite/editar_saida_de_leite.html', data)
         else:
             mensagem = "Usuario não tem permissão para isso."
-            return render(request, 'saidas_de_leite.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
+            return render(request, 'BovSystem/saidas_de_leite.html', {'hora':hora, 'nome':nome, 'mensagem':mensagem})
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 
 def apagar_saida_de_leite(request, id):
-    global logado, permissao
+    global logado, permissao_setor
     if logado:
-        if permissao == 'Administrador':
+        if permissao_setor == 'Administrador':
             saida_de_leite = Saida_Leite.objects.get(id=id)
             saida_de_leite.delete()
             return HttpResponse('')
@@ -1175,5 +1185,5 @@ def apagar_saida_de_leite(request, id):
             return JsonResponse(mensagem)
     else:
         erro = 'É preciso o login para acessar esta página'
-        return render(request, 'erro.html', {'erro': erro})
+        return render(request, 'BovSystem/erro.html', {'erro': erro})
 

@@ -1,0 +1,120 @@
+{% extends 'BovSystem/janela.html' %}
+
+{% load static %}
+
+{% block breadcrumb %}
+Gestações
+{% endblock %}
+
+{% block modal %}
+<div class="modal fade">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="dataTermino">Data de termino da gestação:</label>
+          <span class="d-none">Por favor informe uma data.</span>
+          <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+          <input type="date" class="form-control" id="dataTermino">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="finalizar" onclick="">Finalizar</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block tabela %}
+<script>
+  let tabela = $('table').DataTable({
+    ajax: {
+      url: `{% url 'bovsystem_carregar_gestacoes' %}`,
+      type: 'GET',
+      },
+    columns: [
+      { title: 'Código Gestacao', className: 'all' },
+      { title: 'Animal', className: 'all' },
+      { title: 'Inicio', className: 'min-desktop' },
+      { title: 'Andamento', className: 'min-desktop' },
+      { title: 'Termino', className: 'min-desktop' },
+      { className: 'control', title: `<img src="{% static 'BovSystem/img/expandir.svg' %}">` }
+    ],
+    order: [[0, 'desc']],
+    buttons: [
+      {
+        text: `<img height='11px' src="{% static 'BovSystem/img/adicionar.svg' %}"><br>Adic.`,
+        className: 'btn-outline-success',
+        action: function () {
+          window.location.assign("{% url 'bovsystem_cadastrar_gestacao' %}");
+        }
+      },
+      {
+        text: `<img height='13px' src="{% static 'BovSystem/img/concluir.svg' %}"><br>Finalizar`,
+        className: 'finalizar',
+        extend: 'selectedSingle',
+        action: function () {
+          codigo = tabela.row({ selected: true }).data()[0]
+          $("#finalizar").attr("onclick","finalizar("+codigo+")")
+          andamento = tabela.row({ selected: true }).data()[3]
+          if (andamento == "Em andamento"){
+            $('.modal').modal('show');
+          }else{
+            alert("Gestação já está finalizada")
+          }
+        }
+      },
+      {
+        text: `<img height='10px' src="{% static 'BovSystem/img/editar.svg' %}"><br>Editar`,
+        className: 'editar',
+        extend: 'selectedSingle',
+        action: function () {
+          codigo = tabela.row({ selected: true }).data()[0]
+          url = "/bovsystem/gestacoes/"+ codigo +"/editar/"
+          window.location.assign(url);
+        }
+      },
+      {
+        text: `<img height='13px' src="{% static 'BovSystem/img/apagar.svg' %}"><br>Apagar`,
+        className: 'apagar',
+        extend: 'selectedSingle',
+        action: function () {
+          codigo = tabela.row({ selected: true }).data()[0]
+          token = { 'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val() }
+          url = "/bovsystem/gestacoes/"+ codigo +"/apagar/"
+          $.post(url, token, function (data) { 
+            if (typeof data.mensagem != "undefined"){
+              alert(data.mensagem)
+            }
+            tabela.ajax.reload(function () {}, false).columns.adjust()
+            $('#resultados').attr('max', tabela.rows().count())
+          })
+        }
+      }
+    ]
+  })
+  {% if mensagem %}
+    $('document').ready(()=>{
+      alert("{{mensagem}}")
+    })
+  {% endif %}
+</script>
+{% csrf_token %}
+{% endblock %}
+{% block envio %}
+<script>
+  function finalizar(codigo) {
+    data = $("#dataTermino").val()
+    token = { 'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val() }
+    url = "/bovsystem/gestacoes/"+ codigo +"/concluir/"+ data +"/"
+    window.location.assign(url);
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% load static %}
+<html lang="pt-br">
+<head>
+	<title>BovSystem</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" href="{% static 'BovSystem/img/icons/favicon.ico' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet"  href="{% static 'BovSystem/vendor/bootstrap/css/bootstrap.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet"  href="{% static 'BovSystem/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet"  href="{% static 'BovSystem/fonts/iconic/css/material-design-iconic-font.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet"  href="{% static 'BovSystem/vendor/animate/animate.css' %}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet"  href="{% static 'BovSystem/vendor/css-hamburgers/hamburgers.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet"  href="{% static 'BovSystem/vendor/animsition/css/animsition.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet"  href="{% static 'BovSystem/vendor/select2/select2.min.css' %}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet"  href="{% static 'BovSystem/vendor/daterangepicker/daterangepicker.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet"  href="{% static 'BovSystem/css/util.css' %}">
+	<link rel="stylesheet"  href="{% static 'BovSystem/css/main.css' %}">
+<!--===============================================================================================-->
+
+</head>
+<body>
+	
+	<div class="limiter">
+		<div id="login-container" class="container-login100">
+			<div class="wrap-login100 p-t-0 p-b-0">
+				<form id="login_form"class="login100-form validate-form" method="POST" action="{% url 'bovsystem_validacao' %}">
+					{% csrf_token %}
+					<div class= "imagem" aling="center">
+					<img id="logo" src="{% static 'BovSystem/img/avatar-01.jpg' %}" width="400">
+					</div>
+					<div class="wrap-input100 validate-input m-t-85 m-b-35" data-validate = "Digite seu usuário">
+						<input id="input_login" class="input100" type="text" name="username">
+						<span class="focus-input100" data-placeholder="Usuário"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-50" data-validate="Digite sua senha">
+						<input id="input_senha" class="input100" type="password" name="pass">
+						<span class="focus-input100" data-placeholder="Senha"></span>
+					</div>
+
+					
+						<div class="container-login100-form-btn">
+							<button class="login100-form-btn" type="submit">
+								Login
+							</button>
+						</div>
+					
+
+					<ul class="login-more p-t-50">
+						<ul>
+							<span class="txt1">
+								Entrar como
+							</span>
+
+							<a id="convidado" href="#" onclick="submitConvidado()">
+								convidado
+							</a>
+						</ul>
+					</ul>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+
+	<div id="dropDownSelect1"></div>
+	
+<!--===============================================================================================-->
+	<script src="{% static 'BovSystem/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'BovSystem/vendor/animsition/js/animsition.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'BovSystem/vendor/bootstrap/js/popper.js' %}"></script>
+	<script src="{% static 'BovSystem/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'BovSystem/vendor/select2/select2.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'BovSystem/vendor/daterangepicker/moment.min.js' %}"></script>
+	<script src="{% static 'BovSystem/vendor/daterangepicker/daterangepicker.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'BovSystem/vendor/countdowntime/countdowntime.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'BovSystem/js/main.js' %}"></script>
+	<script src="{% static 'BovSystem/js/jquery.min.js' %}"></script>
+
+<script>
+	{% if mensagem %}
+		$('document').ready(()=>{
+		alert("{{mensagem}}")
+		})
+	{% endif %}
+	function submitConvidado(){
+		$("#input_login").val("alunoip")
+		$("#input_senha").val("ifrn")
+		$("#login_form").submit()
+	}
+</script>
+</body>
+</html>

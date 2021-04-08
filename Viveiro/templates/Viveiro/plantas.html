@@ -1,0 +1,262 @@
+{% extends 'Viveiro/janela.html' %}
+
+{% load static %}
+
+{% block breadcrumb %}
+Plantas
+{% endblock %}
+
+{% block modal %}
+<div class="form-group">
+  <label for="especie">Espécie:</label>
+  <span class="d-none">Por favor, informe a espécie.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="especie">
+</div>
+<div class="form-group">
+  <label for="tipo">Tipo:</label>
+  <span class="d-none">Por favor, informe o tipo.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="tipo">
+</div>
+<div class="form-group">
+  <label for="producao">Produção</label>
+  <span class="d-none">Por favor informe a quantidade de plantas produzidas</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="number" class="form-control" id="producao">
+</div>
+<div class="form-group">
+  <label for="doacao">Doação:</label>
+  <span class="d-none">Por favor informe a quantidade de plantas que foram doadas</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="number" class="form-control" id="doacao">
+</div>
+<div class="form-group">
+  <label for="venda">Vendas:</label>
+  <span class="d-none">Por favor informe a quantidade de plantas que foram vendidas</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="number" class="form-control" id="venda">
+</div>
+<div class="form-group">
+  <label for="extravio">Extravio:</label>
+  <span class="d-none">Por favor informe a quantidade de plantas que foram extraviadas</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="number" class="form-control" id="extravio">
+</div>
+<div class="form-group">
+  <label for="ifrn">IFRN:</label>
+  <span class="d-none">Por favor informe a quantidade de plantas que foram utilizadas pelo IFRN</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="number" class="form-control" id="ifrn">
+</div>
+{% endblock %}
+
+{% block tabela %}
+<script>
+  let tabela = $('table').DataTable({
+    ajax: `{% url 'viveiro_se_carregar_plantas' %}`,
+    columns: [
+      { title: 'Espécie', className: 'all' },
+      { title: 'Tipo', className: 'all' },
+      { title: 'Produção', className: 'all' },
+      { title: 'Doação', className: 'all' },
+      { title: 'Vendas', className: 'all' },
+      { title: 'Extravio', className: 'all' },
+      { title: 'IFRN', className: 'all' },
+
+      { className: 'control', title: `<img src="{% static 'Viveiro/img/expandir.svg' %}">` }
+    ],
+    order: [[1, 'asc']],
+    buttons: [
+      {
+        text: `<img height='11px' src="{% static 'Viveiro/img/adicionar.svg' %}"><br>Adic.`,
+        className: 'btn-outline-success',
+        action: function () {
+          $('.modal-title').text('Adicionar planta')
+          $('form input').removeClass('is-valid is-invalid').prev().removeClass('text-muted').empty()
+          $('#especie').val('')
+          $('#tipo').val('')
+          $('#producao').val('')
+          $('#doacao').val('')
+          $('#venda').val('')
+          $('#extravio').val('')
+          $('#ifrn').val('')
+          $('#salvar').addClass('disabled')
+          $('.modal').prop('acao', 'adicionar').modal('show')
+        }
+      },
+      {
+        text: `<img height='10px' src="{% static 'Viveiro/img/editar.svg' %}"><br>Editar`,
+        className: 'editar',
+        extend: 'selectedSingle',
+        action: function () {
+          $('.modal-title').text('Editar servidor(a)')
+          $('form input').removeClass('is-valid is-invalid').prev().removeClass('text-muted').empty()
+          $('#especie').val(tabela.row({ selected: true }).data()[0])
+          $('#tipo').val(tabela.row({ selected: true }).data()[1])
+          $('#producao').val(tabela.row({ selected: true }).data()[2])
+          $('#doacao').val(tabela.row({ selected: true }).data()[3])
+          $('#venda').val(tabela.row({ selected: true }).data()[4])
+          $('#extravio').val(tabela.row({ selected: true }).data()[5])
+          $('#ifrn').val(tabela.row({ selected: true }).data()[6])
+          $('#salvar').addClass('disabled')
+          $('.modal').prop('acao', 'editar').modal('show')
+        }
+      },
+      {
+        text: `<img height='13px' src="{% static 'Viveiro/img/apagar.svg' %}"><br>Apagar`,
+        className: 'apagar',
+        extend: 'selectedSingle',
+        action: function () { apagar() }
+      }
+    ]
+  })
+</script>
+{% endblock %}
+
+{% block validacao %}
+<script>
+  $('form input').on('input', function () {
+    $('#salvar').addClass('disabled')
+    input = $(this).removeClass('is-valid').addClass('is-invalid')
+    valor = input.val()
+    mensagem = input.prev().removeClass('text-muted')
+    switch (input.attr('id')) {
+      case 'especie':
+        if (valor == '') {
+          mensagem.text('Por favor informe uma espécie.')
+        } else if (valor.match(/^[a-záàâãéèêíïóôõöúçñ ]+$/i) == null) {
+          mensagem.text('Apenas letras.')
+        } else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }; break
+      case 'tipo':
+        if (valor == '') {
+          mensagem.text('Por favor informe um tipo.')
+        } else if (valor.match(/^[a-záàâãéèêíïóôõöúçñ ]+$/i) == null) {
+          mensagem.text('Apenas letras.')
+        } else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }; break
+      case 'producao':
+        if (valor == '') {
+          mensagem.text('Por favor informe uma quantidade.')
+        } else if (valor.match(/^[0-9]+$/) == null) {
+          mensagem.text('Somente números.')
+        } else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }
+      case 'doacao':
+        if (valor == '') {
+          mensagem.text('Por favor informe uma quantidade.')
+        } else if (valor.match(/^[0-9]+$/) == null) {
+          mensagem.text('Somente números.')
+        } else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }
+      case 'venda':
+        if (valor == '') {
+          mensagem.text('Por favor informe uma quantidade.')
+        } else if (valor.match(/^[0-9]+$/) == null) {
+          mensagem.text('Somente números.')
+        } else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }
+      case 'extravio':
+        if (valor == '') {
+          mensagem.text('Por favor informe uma quantidade.')
+        } else if (valor.match(/^[0-9]+$/) == null) {
+          mensagem.text('Somente números.')
+        } else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }
+      case 'ifrn':
+        if (valor == '') {
+          mensagem.text('Por favor informe um setor.')
+        } else if (valor.match(/^[0-9]+$/) == null) {
+          mensagem.text('Somente números.')
+        } else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }        
+    }
+    switch ($('.modal').prop('acao')) {
+      case 'adicionar':
+        $('form input').each(function () {
+          input = $(this)
+          valor = input.val()
+          mensagem = input.prev().text()
+          if (valor != '' && mensagem == '') {
+            input.removeClass('is-invalid').addClass('is-valid')
+          }
+        })
+        if ($('.is-valid').length == $('form input').length) {
+          $('#salvar').removeClass('disabled')
+        } break
+      case 'editar':
+        mensagens = false
+        $('form small').each(function () {
+          if ($(this).text() != '') {
+            mensagens = true
+          }
+        })
+        if ($('.is-invalid').length == 0 && !mensagens) {
+          $('#salvar').removeClass('disabled')
+        }
+    }
+  })
+</script>
+{% endblock %}
+
+{% block envio %}
+<script>
+  function adicionar() {
+    valores = {
+      'especie': $('#especie').val(),
+      'tipo': $('#tipo').val(),
+      'producao': $('#producao').val(),
+      'doacao': $('#doacao').val(),
+      'venda': $('#venda').val(),
+      'extravio': $('#extravio').val(),
+      'ifrn': $('#ifrn').val(),
+          
+    }
+    $.post(`{% url 'viveiro_se_adicionar_plantas' %}`, valores, function () {
+      tabela.ajax.reload(function () {}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+      $('.modal').modal('hide')
+    })
+  }
+  function editar() {
+    valores = {
+      'especie': $('#especie').val(),
+      'tipo': $('#tipo').val(),
+      'producao': $('#producao').val(),
+      'doacao': $('#doacao').val(),
+      'venda': $('#venda').val(),
+      'extravio': $('#extravio').val(),
+      'ifrn': $('#ifrn').val(),       
+    }
+    $.post(`{% url 'viveiro_se_editar_plantas' %}`, valores, function () {
+      tabela.ajax.reload(function () {}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+      $('.modal').modal('hide')
+    })
+  }
+  function apagar() {
+    valores = {
+      'especie': tabela.row({ selected: true }).data()[0]
+    }
+    $.post(`{% url 'viveiro_se_apagar_plantas' %}`, valores, function () {
+      tabela.ajax.reload(function () {}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+    })
+  }
+</script>
+{% endblock %}

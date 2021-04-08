@@ -1,0 +1,278 @@
+{% extends 'OvinoSystem/janela.html' %}
+
+{% load static %}
+
+{% block breadcrumb %}
+Animais
+{% endblock %}
+
+{% block modal %}
+<div class="form-group">
+  <label for="codigo">Brinco:</label>
+  <span class="d-none">Por favor informe um brinco.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="codigo">
+</div>
+<div class="form-group">
+  <label for="nome">Nome:</label>
+  <span class="d-none">Por favor informe um nome.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="nome">
+</div>
+<div class="form-group">
+  <label for="sexo">Sexo:</label>
+  <span class="d-none">Por favor informe um sexo.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="sexo">
+</div>
+<div class="form-group">
+  <label for="peso">Peso:</label>
+  <span class="d-none">Por favor informe um peso.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="peso">
+</div>
+<div class="form-group">
+  <label for="especie">Espécie:</label>
+  <span class="d-none">Por favor informe a espécie.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="especie">
+</div>
+<div class="form-group">
+  <label for="raca">Raça:</label>
+  <span class="d-none">Por favor informe uma raça.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="raca">
+</div>
+<div class="form-group">
+  <label for="pelagem">Pelagem:</label>
+  <span class="d-none">Por favor informe a pelagem do animal.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="pelagem">
+</div>
+<div class="form-group">
+  <label for="data_nascimento">Data de nascimento:</label>
+  <span class="d-none">Por favor informe a data de nascimento.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="date" class="form-control" id="data_nascimento">
+</div>
+<div class="form-group">
+  <label for="registro">Data de registro:</label>
+  <span class="d-none">Por favor informe a data de registro.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="date" class="form-control" id="registro">
+</div>
+{% endblock %}
+
+{% block tabela %}
+{% csrf_token %}
+<script>
+  let tabela = $('table').DataTable({
+    ajax: {
+      url: `{% url 'ovinosystem_carregar_animais' %}`,
+      type: 'POST',
+      },
+    columns: [
+      { title: 'Brinco', className: 'all' },
+      { title: 'Nome', className: 'all' },
+      { title: 'Sexo', className: 'min-desktop' },
+      { title: 'Peso', className: 'min-desktop' },
+      { title: 'Espécie', className: 'min-desktop' },
+      { className: 'control', title: `<img src="{% static 'OvinoSystem/img/expandir.svg' %}">` }
+    ],
+    order: [[1, 'asc']],
+    buttons: [
+      {
+        text: `<img height='11px' src="{% static 'OvinoSystem/img/adicionar.svg' %}"><br>Adic.`,
+        className: 'btn-outline-success',
+        action: function () {
+          $('.modal-title').text('Adicionar Animal')
+          $('form input').removeClass('is-valid is-invalid').prev().removeClass('text-muted').empty()
+          $('#codigo').prop('disabled', false).val('')
+          $('#nome').val('')
+          $('#sexo').val('')
+          $('#peso').val('')
+          $('#especie').val('') 
+          $('#raca').val('')
+          $('#pelagem').val('')
+          $('#data_nascimento').val('')
+          $('#registro').val('')
+          $('#salvar').addClass('disabled')
+          $('.modal').prop('acao', 'adicionar').modal('show')
+        }
+      },
+      {
+        text: `<img height='10px' src="{% static 'OvinoSystem/img/editar.svg' %}"><br>Editar`,
+        className: 'editar',
+        extend: 'selectedSingle',
+        action: function () {
+          $('.modal-title').text('Editar Animal')
+          $('form input').removeClass('is-valid is-invalid').prev().removeClass('text-muted').empty()
+          $('#codigo').prop('disabled', true).val(tabela.row({ selected: true }).data()[0])
+          $('#nome').val(tabela.row({ selected: true }).data()[1])
+          $('#sexo').val(tabela.row({ selected: true }).data()[2])
+          $('#peso').val(tabela.row({ selected: true }).data()[3])
+          $('#especie').val(tabela.row({ selected: true }).data()[4])
+          $('#raca').val(tabela.row({ selected: true }).data()[5])
+          $('#pelagem').val(tabela.row({ selected: true }).data()[6])
+          $('#data_nascimento').val(tabela.row({ selected: true }).data()[7])
+          $('#registro').val(tabela.row({ selected: true }).data()[8])
+          $('#salvar').addClass('disabled')
+          $('.modal').prop('acao', 'editar').modal('show')
+        }
+      },
+      {
+        text: `<img height='13px' src="{% static 'OvinoSystem/img/apagar.svg' %}"><br>Apagar`,
+        className: 'apagar',
+        extend: 'selectedSingle',
+        action: function () { apagar() }
+      },
+    ]
+  })
+</script>
+{% endblock %}
+
+{% block validacao %}
+<script>
+  $('form input').on('input', function () {
+    $('#salvar').addClass('disabled')
+    input = $(this).removeClass('is-valid').addClass('is-invalid')
+    valor = input.val()
+    mensagem = input.prev().removeClass('text-muted')
+    switch (input.attr('id')) {
+      case 'codigo':
+        chave = tabela.column(0).data().toArray()
+        if (valor == '') {
+          mensagem.text('Por favor informe um brinco.')
+        } else if (valor.match(/^[0-9]+$/) == null) {
+          mensagem.text('Somente números.')
+        } else if (chave.includes(valor)) {
+          mensagem.text('Este brinco já existe.')
+        } else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }; break
+      case 'nome':
+        if (valor == '') {
+          mensagem.text('Por favor informe um nome.')
+        } else if (valor.match(/^[a-záàâãéèêíïóôõöúçñ ]+$/i) == null) {
+          mensagem.text('Apenas letras.')
+        } else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }; break
+      case 'sexo':
+        if (valor == '') {
+          mensagem.text('Por favor informe um sexo.')
+        } else if (valor.match(/^[a-záàâãíïóôõöúçñ ]+$/i) == null) {
+          mensagem.text('Apenas letras.')
+        } else if (valor != 'Femea' && valor != 'Macho' && valor != "femea" && valor != "macho" ) {
+          mensagem.text('Sexo inválido.')
+        } else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }; break
+      case 'especie':
+        if (valor == '') {
+          mensagem.text('Por favor informe a espécie.')
+        } else if (valor.match(/^[a-záàâãéèêíïóôõöúçñ ]+$/i) == null) {
+          mensagem.text('Apenas letras.')
+        } else if (valor != 'Caprino' && valor != 'Ovino') {
+          mensagem.text('Espécie inválida.')
+        } else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }; break
+      case 'peso':
+        if (valor == '') {
+          mensagem.text('Por favor informe um peso.')
+        } else if (valor.match(/^[0-9.]+$/) == null) {
+          mensagem.text('Apenas números e .')
+        } else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }
+    }
+    switch ($('.modal').prop('acao')) {
+      case 'adicionar':
+        $('form input').each(function () {
+          input = $(this)
+          valor = input.val()
+          mensagem = input.prev().text()
+          if (valor != '' && mensagem == '') {
+            input.removeClass('is-invalid').addClass('is-valid')
+          }
+        })
+        if ($('.is-valid').length == $('form input').length) {
+          $('#salvar').removeClass('disabled')
+        } break
+      case 'editar':
+        mensagens = false
+        $('form small').each(function () {
+          if ($(this).text() != '') {
+            mensagens = true
+          }
+        })
+        if ($('.is-invalid').length == 0 && !mensagens) {
+          $('#salvar').removeClass('disabled')
+        }
+    }
+  })
+</script>
+{% endblock %}
+
+{% block envio %}
+<script>
+  function adicionar() {
+    valores = {
+      'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
+      'codigo': $('#codigo').val(),
+      'nome': $('#nome').val(),
+      'sexo': $('#sexo').val(),
+      'peso': $('#peso').val(),
+      'especie': $('#especie').val(),
+      'raca': $('#raca').val(),
+      'pelagem': $('#pelagem').val(),
+      'data_nascimento': $('#data_nascimento').val(),
+      'registro': $('#registro').val(),
+      'modelo': 'A'
+    }
+    $.post(`{% url 'ovinosystem_adicionar' %}`, valores, function () {
+      tabela.ajax.reload(function () {}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+      $('.modal').modal('hide')
+    })
+  }
+  function editar() {
+    valores = {
+      'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
+      'codigo': $('#codigo').val(),
+      'nome': $('#nome').val(),
+      'sexo': $('#sexo').val(),
+      'peso': $('#peso').val(),
+      'especie': $('#especie').val(),
+      'raca': $('#raca').val(),
+      'pelagem': $('#pelagem').val(),
+      'data_nascimento': $('#data_nascimento').val(),
+      'registro': $('#registro').val(),
+      'modelo': 'A'
+    }
+    $.post(`{% url 'ovinosystem_adicionar' %}`, valores, function () {
+      tabela.ajax.reload(function () {}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+      $('.modal').modal('hide')
+    })
+  }
+  function apagar() {
+    valores = {
+      'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
+      'codigo': tabela.row({ selected: true }).data()[0],
+      'modelo': 'A'
+    }
+    $.post(`{% url 'ovinosystem_apagar' %}`, valores, function () {
+      tabela.ajax.reload(function () {}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+    })
+  }
+  
+</script>
+{% endblock %}

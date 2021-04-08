@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'f66b)dtmswazenn9$%tli9vq346hz#7l%932s$7c7ls-rok3bu'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '[::1]']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'BovSystem',
+    'OvinoSystem',
+    'Viveiro',
+    'SUGEF_APP',
 ]
 
 MIDDLEWARE = [
@@ -118,4 +121,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/BovSystem/static/'
+STATIC_URL = '/static/'

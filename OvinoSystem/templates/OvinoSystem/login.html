@@ -1,0 +1,83 @@
+{% load static %}
+<html lang="pt-br">
+<head>
+	<title>SUGEF</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" href="{% static 'OvinoSystem/img/icons/favicon.ico' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet"  href="{% static 'OvinoSystem/vendor/bootstrap/css/bootstrap.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet"  href="{% static 'OvinoSystem/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet"  href="{% static 'OvinoSystem/fonts/iconic/css/material-design-iconic-font.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet"  href="{% static 'OvinoSystem/vendor/animate/animate.css' %}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet"  href="{% static 'OvinoSystem/vendor/css-hamburgers/hamburgers.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet"  href="{% static 'OvinoSystem/vendor/animsition/css/animsition.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet"  href="{% static 'OvinoSystem/vendor/select2/select2.min.css' %}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet"  href="{% static 'OvinoSystem/vendor/daterangepicker/daterangepicker.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet"  href="{% static 'OvinoSystem/css/util.css' %}">
+	<link rel="stylesheet"  href="{% static 'OvinoSystem/css/main.css' %}">
+<!--===============================================================================================-->
+</head>
+<body>
+	
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100 p-t-0 p-b-0">
+				<form class="login100-form validate-form" method="POST" action="{% url 'ovinosystem_validacao' %}">
+					{% csrf_token %}
+					<div class= "imagem" aling="center">
+					<img src="{% static 'OvinoSystem/img/avatar.jpg' %}" height="-200">
+					</div>
+					<div class="wrap-input100 validate-input m-t-85 m-b-35" data-validate = "Digite seu usuário">
+						<input class="input100" type="text" name="username">
+						<span class="focus-input100" data-placeholder="Usuário"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-50" data-validate="Digite sua senha">
+						<input class="input100" type="password" name="pass">
+						<span class="focus-input100" data-placeholder="Senha"></span>
+					</div>
+
+					
+						<div class="container-login100-form-btn">
+							<button class="login100-form-btn" type="submit">
+								Login
+							</button>
+						</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+
+	<div id="dropDownSelect1"></div>
+	
+<!--===============================================================================================-->
+	<script src="{% static 'OvinoSystem/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'OvinoSystem/vendor/animsition/js/animsition.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'OvinoSystem/vendor/bootstrap/js/popper.js' %}"></script>
+	<script src="{% static 'OvinoSystem/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'OvinoSystem/vendor/select2/select2.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'OvinoSystem/vendor/daterangepicker/moment.min.js' %}"></script>
+	<script src="{% static 'OvinoSystem/vendor/daterangepicker/daterangepicker.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'OvinoSystem/vendor/countdowntime/countdowntime.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'OvinoSystem/js/main.js' %}"></script>
+	<script src="{% static 'OvinoSystem/js/jquery.min.js' %}"></script>
+
+</body>
+</html>

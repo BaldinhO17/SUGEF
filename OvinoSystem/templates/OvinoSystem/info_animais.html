@@ -1,0 +1,23 @@
+{% extends 'OvinoSystem/animal-detalhes.html' %}
+
+{% load static %}
+
+{% block url-voltar %} {% url 'ovinosystem_animais' %} {% endblock %}
+{% block codigo-nome %} {{ animal.codigo }} - {{ animal.nome }} {% endblock %}
+
+{% block titulo %} Dados Principais {% endblock %}
+
+
+{% block especs %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <h1>{{Animal.nome}}</h1>
+    <h1>{{Animal.especie}}</h1>
+</body>
+</html>
+{% endblock %}

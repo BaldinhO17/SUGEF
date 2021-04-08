@@ -1,0 +1,187 @@
+{% extends 'BovSystem/animais/base-animal.html' %}
+
+{% load static %}
+
+{% block style %}
+<style>
+    main > .card{
+        margin: 1rem 0;
+    }
+    .dropdown-toggle{
+        text-align: center !important;
+    }
+    .dropdown-toggle::after {
+            margin-left: 0px;
+    }
+    .card-body.py-0.px-0{
+        display: flex !important;
+    }
+    .table.table-hover.table-bordered{
+        border-right-style: solid !important;
+        border-right-width: 0.2rem;
+        max-width: 50%;
+    }
+    .list{
+        flex-direction: column;
+        text-align: center !important;
+    }
+</style>
+{% endblock %}
+
+{% block titulo %} Dados Gerais {% endblock %}
+
+{% block main %}
+<main>
+    <div class="card" id="animal-data">
+        <a class="collapsed card-link dropdown-toggle" data-toggle="collapse" href="#animal-collapse">
+            <div class="card-header">
+            <span>Animal</span>
+            </div>
+        </a>
+        <div id="animal-collapse" class="collapse" data-parent="#animal-data">
+            <div class="card-body py-0 px-0">
+                <table class="table table-hover table-bordered">
+                    <tbody>
+                        <tr>
+                          <th scope="row">Código</th>
+                          <td>{{animal.codigo}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Nome</th>
+                            <td>{{animal.nome}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Peso</th>
+                            <td>{{animal.peso}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-hover table-bordered">
+                    <tbody>
+                        <tr>
+                          <th scope="row">Sexo</th>
+                          <td>{{animal.sexo}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Raça</th>
+                            <td>{{animal.raca}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% if nascimento %}
+        <div class="card" id="nascimento-data">
+            <a class="collapsed card-link dropdown-toggle" data-toggle="collapse" href="#nascimento-collapse">
+                <div class="card-header">
+                <span>Nascimento</span>
+                </div>
+            </a>
+            <div id="nascimento-collapse" class="collapse" data-parent="#nascimento-data">
+                <div class="card-body py-0 px-0">
+                    <table class="table table-hover table-bordered">
+                        <tbody>
+                            <tr>
+                            <th scope="row">Código</th>
+                            <td>{{nascimento.id}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Data de Nascimento</th>
+                                <td>{{nascimento.data}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Peso de Nascimento</th>
+                                <td>{{nascimento.peso_nasc}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-hover table-bordered">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Mãe</th>
+                                <td onclick="window.location.assign('/animais/{{nascimento.matriz.codigo}}>/mostrar/')">{{nascimento.matriz.nome}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Pai</th>
+                                <td onclick="window.location.assign('/animais/{{nascimento.pai.codigo}}>/mostrar/')">{{nascimento.pai.nome}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if filhos %}
+        <div class="card" id="filhos-list">
+            <a class="collapsed card-link dropdown-toggle" data-toggle="collapse" href="#filhos-collapse">
+                <div class="card-header">
+                <span>Filhos</span>
+                </div>
+            </a>
+            <div id="filhos-collapse" class="collapse" data-parent="#filhos-list">
+                <div class="card-body py-0 px-0 list">
+                    <div></div>
+                    {% for filho in filhos %}
+                        <a class="dropdown-item font-weight-bold" href="/bovsystem/animais/{{filho.codigo}}/mostrar/">{{filho.nome}}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if coberturas %}
+        <div class="card" id="cobertura-data">
+            <a class="collapsed card-link dropdown-toggle" data-toggle="collapse" href="#cobertura-collapse">
+                <div class="card-header">
+                <span>Coberturas</span>
+                </div>
+            </a>
+            <div id="cobertura-collapse" class="collapse" data-parent="#cobertura-data">
+                <div class="card-body py-0 px-0 list">
+                    <div></div>
+                    {% for cobertura in coberturas %}
+                        <a class="dropdown-item font-weight-bold" href="/bovsystem/coberturas/{{cobertura.id}}/editar/">{{cobertura.inicio}} - {% if cobertura.ativa %} Em andamento {% else %}{{cobertura.termino}} {% endif %}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if animal.sexo == "Feminino" %}
+        {% if gravidezes %}
+            <div class="card" id="gravidez-data">
+                <a class="collapsed card-link dropdown-toggle" data-toggle="collapse" href="#gravidez-collapse">
+                    <div class="card-header">
+                    <span>Gravidezes</span>
+                    </div>
+                </a>
+                <div id="gravidez-collapse" class="collapse" data-parent="#gravidez-data">
+                    <div class="card-body py-0 px-0 list">
+                        <div></div>
+                        {% for gravidez in gravidezes %}
+                            <a class="dropdown-item font-weight-bold" href="/bovsystem/gravidezes/{{gravidez.id}}/editar/">{{gravidez.inicio}} - {% if gravidez.ativa %} Em andamento {% else %}{{gravidez.termino}} {% endif %}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if secacoes %}
+            <div class="card" id="secacao-data">
+                <a class="collapsed card-link dropdown-toggle" data-toggle="collapse" href="#secacao-collapse">
+                    <div class="card-header">
+                    <span>Secacoes</span>
+                    </div>
+                </a>
+                <div id="secacao-collapse" class="collapse" data-parent="#secacao-data">
+                    <div class="card-body py-0 px-0 list">
+                            <div></div>
+                            {% for secacao in secacoes %}
+                                <a class="dropdown-item font-weight-bold" href="/bovsystem/secacoes/{{secacao.id}}/editar/">{{secacao.inicio}} - {% if secacao.ativa %} Em andamento {% else %}{{secacao.termino}} {% endif %}</a>
+                            {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+</main>
+
+{% endblock %}

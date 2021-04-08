@@ -1,0 +1,104 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <title>SUGEF</title>
+  <link rel="shortcut icon" href="{% static 'SUGEF_APP/img/icons/avatar-01.ico' %}">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" type="text/css" href="{% static 'SUGEF_APP/css/bootstrap.lumen.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'SUGEF_APP/css/datatables.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'SUGEF_APP/css/flexdatalist.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'SUGEF_APP/css/Chart.min.css' %}">
+
+
+  <style>
+    html {
+      cursor: default;
+    }
+    #principal-footer {
+      position: absolute;
+      top: 95vh;
+      width: 100vw;
+      height: 5vh;
+      background-color: #c9c9c9;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #principal-footer > span > a {
+      font-size: large;
+      font-weight: bolder;
+    }
+    .navbar {
+      z-index: 1;
+    }
+
+    .navbar-brand {
+      width: 38px;
+    }
+
+    .navbar img {
+      height: 25px;
+    }
+
+    @media (max-width: 1225px) {
+      .navbar small {
+        display: none;
+      }
+    }
+
+    .bg-black{
+      background-color: black;
+    }
+  </style>
+
+  {% block css %}
+
+  {% endblock %}
+
+</head>
+
+<body>
+
+  <nav class="navbar navbar-light bg-black py-0 px-1">
+    <div class="navbar-brand mr-0">
+      <a href="https://suap.ifrn.edu.br/" class="text-decoration-none">
+        <img src="{% static 'SUGEF_APP/img/avatar-01.png' %}" class="d-inline-block align-center">
+        <small class="ml-1 font-weight-bold">
+          <span class="text-light">Ipanguaçu</span>
+        </small>
+      </a>
+    </div>
+    <span class="font-weight-bold text-light">
+      {% if  hora < 12 %}
+      Bom dia, 
+      {% elif hora < 18 %}
+      Boa tarde, 
+      {% else %}
+      Boa noite, 
+      {% endif %}
+      <span class="text-warning">{{ nome }}</span>!
+    </span>
+    <a href="{% url 'sugef_app_login' %}" class="btn btn-danger btn-sm">Sair</a>
+  </nav>
+  
+  <script src="{% static 'SUGEF_APP/js/Chart.bundle.min.js' %}"></script>
+  <script src="{% static 'SUGEF_APP/js/jquery.min.js' %}"></script>
+  <script src="{% static 'SUGEF_APP/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'SUGEF_APP/js/datatables.min.js' %}"></script>
+  <script src="{% static 'SUGEF_APP/js/flexdatalist.min.js' %}"></script>
+  {% block conteudo %}
+  
+  {% endblock %}
+  
+  <footer id="principal-footer"><span><a href="/about_us/">Sobre nós</a></span></footer>
+  
+
+</body>
+
+</html>

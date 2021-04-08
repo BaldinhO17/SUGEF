@@ -1,0 +1,108 @@
+{% extends 'SUGEF_APP/base.html' %}
+
+{% load static %}
+
+{% block css %}
+<style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    .main-about-us{
+        margin: 0;
+        padding: 0 10rem;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .content-about-us {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .content-about-us .card{
+        margin: 1.8rem 4rem 0 4rem;
+    }
+    .card-body .card-title{
+        font-weight: bold;
+    }
+    .card-body .card-text img{
+        margin-right: 0.3rem;
+    }
+
+    @media(max-width:760px){
+        .main-about-us{
+            padding: unset;
+        }
+    }
+    @media(max-width:445px){
+        .content-about-us .card{
+            margin: 1rem auto 0 auto;
+    }
+    }
+</style>
+{% endblock %}
+
+{% block conteudo %}
+<div class="main-about-us">
+    <div class="content-about-us">
+        <div class="card shadow rounded" style="width: 18rem;">
+            <img src="{% static 'SUGEF_APP/img/us/Livia.jpeg' %}" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">Aisla Lívia</h5>
+                <p class="card-text"><img height='16px' src="{% static 'SUGEF_APP/img/email.svg' %}"> <a href="mailto:livia.castro@escolar.ifrn.edu.br">livia.castro@escolar.ifrn.edu.br</a></p>
+                <p class="card-text"><img height='16px' src="{% static 'SUGEF_APP/img/instagram.svg' %}"> <a href="https://instagram.com/liviaa.castro">@liviaa.castro</a></p>
+            </div>
+        </div>
+        <div class="card shadow rounded" style="width: 18rem;">
+            <img src="{% static 'SUGEF_APP/img/us/Fredson.jpeg' %}" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">Frédson Douglas</h5>
+                <p class="card-text"><img height='16px' src="{% static 'SUGEF_APP/img/email.svg' %}"> <a href="mailto:fredson.douglas@escolar.ifrn.edu.br">fredson.douglas@escolar.ifrn.edu.br</a></p>
+                <p class="card-text"><img height='16px' src="{% static 'SUGEF_APP/img/instagram.svg' %}"> <a href="https://instagram.com/araujofred_">@araujofred_</a></p>
+            </div>
+        </div>
+        <div class="card shadow rounded" style="width: 18rem;">
+            <img src="{% static 'SUGEF_APP/img/us/Eribaldo.jpeg' %}" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">José Eribaldo</h5>
+                <p class="card-text"><img height='16px' src="{% static 'SUGEF_APP/img/email.svg' %}"> <a href="mailto:eribaldo.barros@escolar.ifrn.edu.br">eribaldo.barros@escolar.ifrn.edu.br</a></p>
+                <p class="card-text"><img height='16px' src="{% static 'SUGEF_APP/img/instagram.svg' %}"> <a href="https://instagram.com/j_eribaldo">@j_eribaldo</a></p>
+            </div>
+        </div>
+        <div class="card shadow rounded" style="width: 18rem;">
+            <img src="{% static 'SUGEF_APP/img/us/Juan.jpeg' %}" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">Juan Gustavo</h5>
+                <p class="card-text"><img height='16px' src="{% static 'SUGEF_APP/img/email.svg' %}"> <a href="mailto:juan.oliveira@escolar.ifrn.edu.br">juan.oliveira@escolar.ifrn.edu.br</a></p>
+                <p class="card-text"><img height='16px' src="{% static 'SUGEF_APP/img/instagram.svg' %}"> <a href="https://instagram.com/jolveira___">@jolveira___</a></p>
+            </div>
+        </div>
+        <div class="card shadow rounded" style="width: 18rem;">
+            <img src="{% static 'SUGEF_APP/img/us/Felipe.jpeg' %}" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">Luiz Felipe</h5>
+                <p class="card-text"><img height='16px' src="{% static 'SUGEF_APP/img/email.svg' %}"> <a href="mailto:pimentel.g@escolar.ifrn.edu.br">pimentel.g@escolar.ifrn.edu.br</a></p>
+                <p class="card-text"><img height='16px' src="{% static 'SUGEF_APP/img/instagram.svg' %}"> <a href="https://instagram.com/l.felps">@l.felps</a></p>
+            </div>
+        </div>
+        <div class="card shadow rounded" style="width: 18rem;">
+            <img src="{% static 'SUGEF_APP/img/us/Mario.jpeg' %}" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">Raimundo Mario</h5>
+                <p class="card-text"><img height='16px' src="{% static 'SUGEF_APP/img/email.svg' %}"> <a href="mailto:raimundo.s@escolar.ifrn.edu.br">raimundo.s@escolar.ifrn.edu.br</a></p>
+                <p class="card-text"><img height='16px' src="{% static 'SUGEF_APP/img/instagram.svg' %}"> <a href="https://instagram.com/r.mario14">@r.mario14</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('document').ready(()=>{
+        $("#principal-footer").css('display', 'none')
+        $("body > .navbar.navbar-light.bg-black.py-0.px-1 .font-weight-bold.text-light").text("Sobre nós").removeClass("text-light").addClass("text-warning")
+    })
+</script>
+{% endblock %}

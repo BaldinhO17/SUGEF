@@ -1,0 +1,179 @@
+{% extends 'OvinoSystem/janela.html' %}
+
+{% load static %}
+
+{% block breadcrumb %}
+Doenças
+{% endblock %}
+
+{% block modal %}
+<div class="form-group">
+  <label for="codigo">Código:</label>
+  <span class="d-none">Por favor informe um código.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="codigo">
+</div>
+<div class="form-group">
+  <label for="nome">Nome:</label>
+  <span class="d-none">Por favor informe um nome.</span>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="nome">
+</div>
+<div class="form-group">
+  <label for="descricao">Descrição:</label>
+  <small class="text-danger font-weight-bold float-right pt-1 mr-2"></small>
+  <input type="text" class="form-control" id="descricao">
+</div>
+{% endblock %}
+
+{% block tabela %}
+{% csrf_token %}
+<script>
+  let tabela = $('table').DataTable({
+    ajax: `{% url 'ovinosystem_carregar_doenca' %}`,
+    columns: [
+      { title: 'Código', className: 'all' },
+      { title: 'Nome', className: 'all' },
+      { className: 'control', title: `<img src="{% static 'OvinoSystem/img/expandir.svg' %}">` }
+    ],
+    order: [[1, 'asc']],
+    buttons: [
+      {
+        text: `<img height='11px' src="{% static 'OvinoSystem/img/adicionar.svg' %}"><br>Adic.`,
+        className: 'btn-outline-success',
+        action: () =>{
+          $('.modal-title').text('Adicionar Doença')
+          $('form input').removeClass('is-valid is-invalid').prev().removeClass('text-muted').empty()
+          $('#codigo').prop('disabled', false).val('')
+          $('#nome').val('')
+          $('#descricao').val('')
+          $('#salvar').addClass('disabled')
+          $('.modal').prop('acao', 'adicionar').modal('show')
+        }
+      },
+      {
+        text: `<img height='10px' src="{% static 'OvinoSystem/img/editar.svg' %}"><br>Editar`,
+        className: 'editar',
+        extend: 'selectedSingle',
+        action: () =>{
+          $('.modal-title').text('Editar Doença')
+          $('form input').removeClass('is-valid is-invalid').prev().removeClass('text-muted').empty()
+          $('#codigo').prop('disabled', true).val(tabela.row({ selected: true }).data()[0])
+          $('#nome').val(tabela.row({ selected: true }).data()[1])
+          $('#descricao').val(tabela.row({ selected: true }).data()[2])
+          $('#salvar').addClass('disabled')
+          $('.modal').prop('acao', 'editar').modal('show')
+        }
+      },
+      {
+        text: `<img height='13px' src="{% static 'OvinoSystem/img/apagar.svg' %}"><br>Apagar`,
+        className: 'apagar',
+        extend: 'selectedSingle',
+        action: () =>{ apagar() }
+      }
+    ]
+  })
+</script>
+{% endblock %}
+
+{% block validacao %}
+<script>
+  $('form input').on('input', function () {
+    $('#salvar').addClass('disabled')
+    input = $(this).removeClass('is-valid').addClass('is-invalid')
+    valor = input.val()
+    mensagem = input.prev().removeClass('text-muted')
+    switch (input.attr('id')) {
+      case 'codigo':
+        chave = tabela.column(0).data().toArray()
+        if (valor == '') {
+          mensagem.text('Por favor informe um código.')
+        } else if (valor.match(/^[0-9]+$/) == null) {
+          mensagem.text('Somente números.')
+        } else if (chave.includes(valor)) {
+          mensagem.text('Este código já existe.')
+        } else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }; break
+      case 'nome':
+        if (valor == '') {
+          mensagem.text('Por favor informe um nome.')
+        } else if (valor.match(/^[a-záàâãéèêíïóôõöúçñ ]+$/i) == null) {
+          mensagem.text('Apenas letras.')
+        } else {
+          mensagem.empty()
+          input.removeClass('is-invalid').addClass('is-valid')
+        }; break
+    }
+    switch ($('.modal').prop('acao')) {
+      case 'adicionar':
+        $('form input').each(() =>{
+          input = $(this)
+          valor = input.val()  
+          mensagem = input.prev().text()
+          if (valor != '' && mensagem == '') {
+            input.removeClass('is-invalid').addClass('is-valid')
+          }
+        })
+        if ($('.is-valid').length == $('form input').length) {
+          $('#salvar').removeClass('disabled')
+        } break
+      case 'editar':
+        mensagens = false
+        $('form small').each(() =>{
+          if ($(this).text() != '') {
+            mensagens = true
+          }
+        })
+        if ($('.is-invalid').length == 0 && !mensagens) {
+          $('#salvar').removeClass('disabled')
+        }
+    }
+  })
+</script>
+{% endblock %}
+
+{% block envio %}
+<script>
+  function adicionar() {
+    valores = {
+      'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
+      'codigo': $('#codigo').val(),
+      'nome': $('#nome').val(),
+      'descricao': $('#descricao').val(),
+      'modelo': 'D'
+    }
+    $.post(`{% url 'ovinosystem_adicionar' %}`, valores, () =>{
+      tabela.ajax.reload(() =>{}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+      $('.modal').modal('hide')
+    })
+  }
+  function editar() {
+    valores = {
+      'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
+      'codigo': $('#codigo').val(),
+      'nome': $('#nome').val(),
+      'descricao': $('#descricao').val(),
+      'modelo': 'D'
+    }
+    $.post(`{% url 'ovinosystem_adicionar' %}`, valores, () =>{
+      tabela.ajax.reload(() =>{}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+      $('.modal').modal('hide')
+    })
+  }
+  function apagar() {
+    valores = {
+      'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
+      'codigo': tabela.row({ selected: true }).data()[0],
+      'modelo': 'D'
+    }
+    $.post(`{% url 'ovinosystem_apagar' %}`, valores, () =>{
+      tabela.ajax.reload(() =>{}, false).columns.adjust()
+      $('#resultados').attr('max', tabela.rows().count())
+    })
+  }
+</script>
+{% endblock %}
