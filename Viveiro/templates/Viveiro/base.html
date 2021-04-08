@@ -17,6 +17,27 @@
     html {
       cursor: default;
     }
+    #principal-footer {
+      position: absolute;
+      top: 95vh;
+      width: 100vw;
+      height: 5vh;
+      background-color: #c9c9c9;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #principal-footer > span > a {
+      font-size: large;
+      font-weight: bolder;
+    }
+    @media (max-width: 575px) {
+      #principal-footer {
+        position: relative;
+        top:100%;
+      }
+    }
 
     .navbar {
       z-index: 1;
@@ -46,7 +67,7 @@
 
   <nav class="navbar navbar-light bg-dark py-0 px-1">
     <div class="navbar-brand mr-0">
-      <a href="/sugef_app/inicio/" class="text-decoration-none">
+      <a href="{% url 'viveiro_index' %}" class="text-decoration-none">
         <img src="{% static 'Viveiro/img/favicon.ico' %}" class="d-inline-block align-center">
         <small class="ml-1 font-weight-bold">
           <span class="text-light">Ipanguaçu</span>
@@ -61,13 +82,15 @@
       {% else %}
       Boa noite,
       {% endif %}
-      <span class="text-warning">{{ user.first_name }}</span>!
+      <span class="text-warning">{{ nome }}</span>!
     </span>
-    <a href="/" class="btn btn-danger btn-sm">Sair</a>
+    <a href="{% url 'viveiro_logout' %}" class="btn btn-danger btn-sm">Sair</a>
   </nav>
 
   {% block conteudo %}
   {% endblock %}
+
+  <footer id="principal-footer"><span><a href="/about_us/">Sobre nós</a></span></footer>
 
   <script src="{% static 'Viveiro/js/jquery.min.js' %}"></script>
   <script src="{% static 'Viveiro/js/bootstrap.bundle.min.js' %}"></script>

@@ -9,7 +9,8 @@ urlpatterns = [
 
     
     
-    path('viveiro/acessar/<str:permissao>/<str:usuario>', views.acessar, name='viveiro_acessar'),
+    
+    path('viveiro/logout/', views.logout, name='viveiro_logout'),
     path('viveiro/plantas/', views.plantas, name='viveiro_plantas'),
     path('viveiro/plantas/carregar/', views.se_carregar_plantas, name='viveiro_se_carregar_plantas'),
     path('viveiro/plantas/adicionar/', views.se_adicionar_plantas, name='viveiro_se_adicionar_plantas'),

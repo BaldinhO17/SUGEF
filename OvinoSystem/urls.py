@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     path('ovinosystem/', views.login, name='ovinosystem_login'),
-    path('ovinosystem/acessar/<str:permissao>/<str:usuario>', views.acessar, name='ovinosystem_acessar'),
+    path('ovinosystem/logout/', views.logout, name='ovinosystem_logout'),
     path('ovinosystem/validacao/', views.validacao, name='ovinosystem_validacao'),
     path('ovinosystem/erro/', views.erro, name='ovinosystem_erro'),
     path('ovinosystem/inicio/', views.index, name='ovinosystem_index'),

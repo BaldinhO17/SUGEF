@@ -26,10 +26,6 @@
       position: unset;
     }
 
-    .d-flex {
-      height: unset;
-    }
-
     .row.mx-auto.mb-3 {
       margin-top: 2rem;
       margin-bottom: 2rem !important;
@@ -87,7 +83,7 @@
     <div class="row text-center mx-5 mt-3">
       <div class="col-sm-4">
         <div class="card">
-          <a href="/sugef_app/bovsystem" class="btn btn-lg btn-outline-primary">BovSystem</a>
+          <a href="{% url 'bovsystem_index' %}" class="btn btn-lg btn-outline-primary">BovSystem</a>
           <div class="card-body">
             <h5 class="card-title">Gerenciamento da Bovinocultura</h5>
             <h6 class="card-subtitle text-muted"></h6>
@@ -97,7 +93,7 @@
       </div>
       <div class="col-sm-4">
         <div class="card">
-          <a href="/sugef_app/ovinosystem" class="btn btn-lg btn-outline-primary">OvinoSystem</a>
+          <a href="{% url 'ovinosystem_index' %}" class="btn btn-lg btn-outline-primary">OvinoSystem</a>
           <div class="card-body">
             <h5 class="card-title">Gerenciamento da Ovinocultura</h5>
             <h6 class="card-subtitle text-muted"></h6>
@@ -107,7 +103,7 @@
       </div>
       <div class="col-sm-4">
         <div class="card">
-          <a href="/sugef_app/viveiro" class="btn btn-lg btn-outline-primary">Viveiro</a>
+          <a href="{% url 'viveiro_index' %}" class="btn btn-lg btn-outline-primary">Viveiro</a>
           <div class="card-body">
             <h5 class="card-title">Gerenciamento do Viveiro</h5>
             <h6 class="card-subtitle text-muted"></h6>

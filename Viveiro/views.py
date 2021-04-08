@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.sessions.models import Session
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -7,41 +7,35 @@ from django.http import HttpResponseNotFound
 from .models import *
 
 hora = timezone.now().hour - 3
-logado = False
 
-def acessar(request, permissao, usuario):
-    global  logado
-    logado = True
-    return redirect('viveiro_index')
-
+def logout(request):
+    if 'logado' in request.session:
+        request.session.flush()
+    return redirect('sugef_app_login')
 
 def index(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         return render(request, 'Viveiro/index.html', {'hora':hora})
     else:
         return HttpResponseNotFound('É preciso login.')
         
 
 def alunos(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         return render(request, 'Viveiro/alunos.html', {'hora':hora})
     else:
         return HttpResponseNotFound('É preciso login.')
         
 
 def plantas(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         return render(request, 'Viveiro/plantas.html', {'hora':hora})
     else:
         return HttpResponseNotFound('É preciso login.')
         
 
 def se_carregar_plantas(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         plantas = Plantas.objects.all()
         dados = []
         for planta in plantas:
@@ -64,8 +58,7 @@ def se_carregar_plantas(request):
         
 
 def se_adicionar_plantas(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         especie = request.POST['especie']
         tipo = request.POST['tipo']
         producao = request.POST['producao']
@@ -82,8 +75,7 @@ def se_adicionar_plantas(request):
         
 
 def se_editar_plantas(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         especie = request.POST['especie']
         planta = Plantas.objects.get(especie=especie)
         planta.especie = request.POST['especie']
@@ -101,8 +93,7 @@ def se_editar_plantas(request):
         
 
 def se_apagar_plantas(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         especie = request.POST['especie']
         planta = Plantas.objects.get(especie=especie)
         planta.delete()
@@ -112,8 +103,7 @@ def se_apagar_plantas(request):
         
 
 def se_carregar_visitas(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         visitas = Visitas.objects.all()
         dados = []
         for visita in visitas:
@@ -133,8 +123,7 @@ def se_carregar_visitas(request):
         
 
 def se_adicionar_visitas(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         cod = request.POST['cod']
         data = request.POST['data']
         hora = request.POST['hora']
@@ -148,8 +137,7 @@ def se_adicionar_visitas(request):
         
 
 def se_editar_visitas(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         cod = request.POST['cod']
         visita = Visitas.objects.get(cod=cod)
         
@@ -164,8 +152,7 @@ def se_editar_visitas(request):
         
 
 def se_apagar_visitas(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         cod = request.POST['cod']
         visita = Visitas.objects.get(cod=cod)
         visita.delete()
@@ -175,8 +162,7 @@ def se_apagar_visitas(request):
         
 
 def se_carregar_insumos(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         insumos = Insumos.objects.all()
         dados = []
         for insumo in insumos:
@@ -197,8 +183,7 @@ def se_carregar_insumos(request):
         
 
 def se_adicionar_insumos(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         cod = request.POST['cod']
         tipo = request.POST['tipo']
         marca = request.POST['marca']
@@ -213,8 +198,7 @@ def se_adicionar_insumos(request):
         
 
 def se_editar_insumos(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         cod = request.POST['cod']
         insumo = Insumos.objects.get(cod=cod)
         
@@ -229,8 +213,7 @@ def se_editar_insumos(request):
         
 
 def se_apagar_insumos(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         cod = request.POST['cod']
         insumo = Insumos.objects.get(cod=cod)
         insumo.delete()
@@ -240,40 +223,35 @@ def se_apagar_insumos(request):
         
 
 def objetos(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         return render(request, 'Viveiro/objetos.html', {'hora':hora})
     else:
         return HttpResponseNotFound('É preciso login.')
         
 
 def turmas(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         return render(request, 'Viveiro/turmas.html', {'hora':hora})
     else:
         return HttpResponseNotFound('É preciso login.')
         
 
 def plantas(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         return render(request, 'Viveiro/plantas.html', {'hora':hora})
     else:
         return HttpResponseNotFound('É preciso login.')
         
 
 def visitas(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         return render(request, 'Viveiro/visitas.html', {'hora':hora})
     else:
         return HttpResponseNotFound('É preciso login.')
         
 
 def insumos(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         return render(request, 'Viveiro/insumos.html', {'hora':hora})
     else:
         return HttpResponseNotFound('É preciso login.')

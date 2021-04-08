@@ -3,45 +3,44 @@ from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.contrib.sessions.models import Session
 from .models import *
+from SUGEF_APP.models import Usuario, Acessa, Setor
 
 hora = timezone.now().hour - 3
-nome = ''
-logado = False
-permissao_setor = 'visitante'
-info = None
-
-def setLogado(request):
-    global logado
-    logado = not logado
 
 def login(request):
-    global logado
-    logado = False
+    if 'logado' in request.session:
+        return redirect('ovinosystem_index')
+    setores = {
+        'viveiro':'Visitante',
+        'bovsystem':'Visitante',
+        'ovinosystem':'Visitante',
+    }
+    request.session['setores'] = setores
     return render(request, 'OvinoSystem/login.html', {})
 
-def acessar(request, permissao, usuario):
-    global  logado, nome, permissao_setor
-    logado = True
-    nome = usuario
-    permissao_setor = permissao
-    return redirect('ovinosystem_index')
-
+def logout(request):
+    if 'logado' in request.session:
+        request.session.flush()
+    return redirect('sugef_app_login')
 
 def validacao(request):
-    global logado, nome
-    if not logado:
+    if not 'logado' in request.session:
         login = request.POST["username"]
         senha = request.POST["pass"]
-        usuarios = Usuario.objects.all()
-        perms = Acessa.objects.all()
-        for user in usuarios:
-            if login == user.matricula and senha == user.senha:
-                setLogado(request)
-                nome = user.nome
-                for perm in perms:
-                    if perm.usuario.id == user.id and perm.permissao == 'adm':
+        usuario = Usuario.objects.get(matricula=login)
+        if usuario:
+            if senha == usuario.senha:
+                request.session['logado'] = True
+                request.session['usuario'] = usuario.matricula
+                permissoes = Acessa.objects.filter(usuario=usuario.id)
+                for permissao in permissoes:
+                    request.session['setores'][permissao.setor.nome] = permissao.permissao
+                    if (permissao.setor.nome == 'ovinosystem') and (permissao.permissao == 'Bolsista' or permissao.permissao == 'Administrador'):
                         return redirect('ovinosystem_index')
+                else:
+                    return redirect('sugef_app_index')
         else:
             return redirect('ovinosystem_login')
     else:
@@ -52,82 +51,79 @@ def erro(request):
     return render(request, 'OvinoSystem/erro.html', {'erro': erro})
 
 def index(request):
-    global logado
-    if logado:
-        return render(request, 'OvinoSystem/index.html', {'hora':hora, 'nome':nome})
+    if 'logado' in request.session:
+        return render(request, 'OvinoSystem/index.html', {'hora':hora, 'nome':Usuario.objects.get(matricula=request.session['usuario']).nome})
     else:
         erro = 'É preciso o login para acessar esta página'
         return render(request, 'OvinoSystem/erro.html', {'erro': erro})
 
 def animais(request):
-    global logado
-    if logado:
-        return render(request, 'OvinoSystem/animais.html', {'hora':hora, 'nome':nome})
+    if 'logado' in request.session:
+        return render(request, 'OvinoSystem/animais.html', {'hora':hora, 'nome':Usuario.objects.get(matricula=request.session['usuario']).nome})
     else:
         erro = 'É preciso o login para acessar esta página'
         return render(request, 'OvinoSystem/erro.html', {'erro': erro})
 
 def estoque(request):
-    global logado
-    if logado:
-        return render(request, 'OvinoSystem/estoque.html', {'hora':hora, 'nome':nome})
+    if 'logado' in request.session:
+        return render(request, 'OvinoSystem/estoque.html', {'hora':hora, 'nome':Usuario.objects.get(matricula=request.session['usuario']).nome})
     else:
         erro = 'É preciso o login para acessar esta página'
         return render(request, 'OvinoSystem/erro.html', {'erro': erro})
 
 def doenca(request):
-    global logado
-    if logado:
-        return render(request, 'OvinoSystem/doenca.html', {'hora':hora, 'nome':nome})
+    if 'logado' in request.session:
+        return render(request, 'OvinoSystem/doenca.html', {'hora':hora, 'nome':Usuario.objects.get(matricula=request.session['usuario']).nome})
     else:
         erro = 'É preciso o login para acessar esta página'
         return render(request, 'OvinoSystem/erro.html', {'erro': erro})      
 
 def vinculardoenca(request):
-    global logado
-    if logado:
-        return render(request, 'OvinoSystem/vinculardoenca.html', {'hora':hora, 'nome':nome})
+    if 'logado' in request.session:
+        return render(request, 'OvinoSystem/vinculardoenca.html', {'hora':hora, 'nome':Usuario.objects.get(matricula=request.session['usuario']).nome})
     else:
         erro = 'É preciso o login para acessar esta página'
         return render(request, 'OvinoSystem/erro.html', {'erro': erro})      
 
 def saida(request):
-    global logado
-    if logado:
-        return render(request, 'OvinoSystem/saida.html', {'hora':hora, 'nome':nome})
+    if 'logado' in request.session:
+        return render(request, 'OvinoSystem/saida.html', {'hora':hora, 'nome':Usuario.objects.get(matricula=request.session['usuario']).nome})
     else:
         erro = 'É preciso o login para acessar esta página'
         return render(request, 'OvinoSystem/erro.html', {'erro': erro})  
 
 def modelos(dados, mod, acao):
-    if acao:
-        if mod == 'M':
-            return Material(tipo=dados[0], nome=dados[1], validade=dados[2], quantidade=dados[3])
-        elif mod == 'A':           
-            return Animal(codigo=dados[0], nome=dados[1], sexo=dados[2], peso=dados[3], especie=dados[4], raca=dados[5], pelagem=dados[6], data_nascimento=dados[7], registro=dados[8])
-        elif mod == 'D':
-            return Doenca(codigo=dados[0], nome=dados[1], descricao=dados[2])
-        elif mod == 'V':
-            return VincularDoenca(id=dados[0], animal=Animal.objects.get(codigo=dados[1]), doenca=Doenca.objects.get(codigo=dados[2]), dataregistro=dados[3])
-        elif mod == 'S':
-            return SaidaAnimal(codigo=dados[0], motivo=dados[1], saida=dados[2])
-    else:
-        if mod == 'M':
-            return Material.objects.get(nome=dados)
-        elif mod == 'A':
-            return Animal.objects.get(codigo=dados)
-        elif mod == 'D':
-            return Doenca.objects.get(codigo=dados)
-        elif mod == 'V':
-            return VincularDoenca.objects.get(id=dados)   
-        elif mod == 'S':
-            return SaidaAnimal.objects.get(codigo=dados)
+    if 'logado' in request.session:
+        if acao:
+            if mod == 'M':
+                return Material(tipo=dados[0], nome=dados[1], validade=dados[2], quantidade=dados[3])
+            elif mod == 'A':           
+                return Animal(codigo=dados[0], nome=dados[1], sexo=dados[2], peso=dados[3], especie=dados[4], raca=dados[5], pelagem=dados[6], data_nascimento=dados[7], registro=dados[8])
+            elif mod == 'D':
+                return Doenca(codigo=dados[0], nome=dados[1], descricao=dados[2])
+            elif mod == 'V':
+                return VincularDoenca(id=dados[0], animal=Animal.objects.get(codigo=dados[1]), doenca=Doenca.objects.get(codigo=dados[2]), dataregistro=dados[3])
+            elif mod == 'S':
+                return SaidaAnimal(codigo=dados[0], motivo=dados[1], saida=dados[2])
         else:
-            return ''
+            if mod == 'M':
+                return Material.objects.get(nome=dados)
+            elif mod == 'A':
+                return Animal.objects.get(codigo=dados)
+            elif mod == 'D':
+                return Doenca.objects.get(codigo=dados)
+            elif mod == 'V':
+                return VincularDoenca.objects.get(id=dados)   
+            elif mod == 'S':
+                return SaidaAnimal.objects.get(codigo=dados)
+            else:
+                return ''
+    else:
+        erro = 'É preciso o login para acessar esta página'
+        return render(request, 'OvinoSystem/erro.html', {'erro': erro})
 
 def adicionar(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         dados = []
         for i in request.POST:
             if not i == 'modelo' and not i == 'csrfmiddlewaretoken':
@@ -140,8 +136,7 @@ def adicionar(request):
         return render(request, 'OvinoSystem/erro.html', {'erro': erro})
 
 def apagar(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         aux = modelos(request.POST['codigo'], request.POST['modelo'], False)
         aux.delete()
         return HttpResponse('')
@@ -152,8 +147,7 @@ def apagar(request):
 # ------ Funções da página Animal ------
 
 def carregar_animais(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         animais = Animal.objects.all()
         dados = []
         for animal in animais:
@@ -178,19 +172,17 @@ def carregar_animais(request):
         return render(request, 'OvinoSystem/erro.html', {'erro': erro})
 
 def info_animais(request):
-    global logado, info
-    if logado:
+    if 'logado' in request.session:
         codigo = request.POST['codigo']
-        info = codigo
+        request.session['info'] = codigo
         return HttpResponse('')
     else:
         erro = 'É preciso o login para acessar esta página'
         return render(request, 'OvinoSystem/erro.html', {'erro': erro})
 
 def carregar_info_animal(request, codigo):
-    global logado, info
-    if logado:  
-        animal = Animal.objects.get(codigo=info)
+    if 'logado' in request.session:  
+        animal = Animal.objects.get(codigo=request.session['info'])
         animal = Animal.get_object_or_404(Animal, pk='codigo')
         return render(request, 'OvinoSystem/info_animais.html', {'animal': animal})
     else:
@@ -198,10 +190,9 @@ def carregar_info_animal(request, codigo):
         return render(request, 'OvinoSystem/erro.html', {'erro': erro})
 
 def carregar_graf_produc(request):
-    global logado, info
-    if logado:
-        animal = Animal.objects.get(nome=info)
-        return render(request, 'OvinoSystem/graficos.html', {'animal': animal, 'hora':hora, 'nome':nome})
+    if 'logado' in request.session:
+        animal = Animal.objects.get(nome=request.session['info'])
+        return render(request, 'OvinoSystem/graficos.html', {'animal': animal, 'hora':hora, 'nome':Usuario.objects.get(matricula=request.session['usuario']).nome})
     else:
         erro = 'É preciso o login para acessar esta página'
         return render(request, 'OvinoSystem/erro.html', {'erro': erro})
@@ -209,8 +200,7 @@ def carregar_graf_produc(request):
 # ------ Funções da página Estoque ------
 
 def carregar_estoque(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         estoque = Material.objects.all()
         dados = []
         for material in estoque:
@@ -233,8 +223,7 @@ def carregar_estoque(request):
 # ------ Funções da página Doença ------
 
 def carregar_doenca(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         registro = Doenca.objects.all()
         dados = []
         for doenca in registro:
@@ -256,8 +245,7 @@ def carregar_doenca(request):
 # ------ Funções da página Doença ------
 
 def carregar_vincular_doenca(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         registro = VincularDoenca.objects.all()
         dados = []
         for vinculardoenca in registro:
@@ -278,8 +266,7 @@ def carregar_vincular_doenca(request):
 
 #-----------------GERENCIAR SAIDA---------------------
 def carregar_saida(request):
-    global logado
-    if logado:
+    if 'logado' in request.session:
         registro = SaidaAnimal.objects.all()
         dados = []
         for saida in registro:

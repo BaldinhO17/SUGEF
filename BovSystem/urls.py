@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     path('bovsystem/', views.login, name='bovsystem_login'),
-    path('bovsystem/acessar/<str:permissao>/<str:usuario>', views.acessar, name='bovsystem_acessar'),
+    path('bovsystem/logout/', views.logout, name='bovsystem_logout'),
     path('bovsystem/validacao/', views.validacao, name='bovsystem_validacao'),
     path('bovsystem/erro/', views.erro, name='bovsystem_erro'),
     path('bovsystem/inicio/', views.index, name='bovsystem_index'),

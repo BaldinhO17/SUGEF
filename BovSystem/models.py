@@ -1,25 +1,7 @@
 from django.db import models
 
 # Create your models here.
-class Usuario(models.Model):
-    matricula = models.CharField(max_length=20)
-    senha = models.CharField(max_length=50)
-    nome = models.CharField(max_length=64)
 
-class Acessa(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    setor = models.CharField(max_length=15, choices=[
-          ('Bovinocultura','Bovinocultura'),
-          ('Viveiro','Viveiro'),
-          ('Ovinocultura','Ovinocultura')
-      ])
-    permissao = models.CharField(max_length=15, choices=[
-          ('Administrador','Administrador'),
-          ('Cordenador','Cordenador'),
-          ('Bolsista','Bolsista'),
-          ('Visitante','Visitante'),
-
-      ])
 
 class Animal(models.Model):
     codigo = models.IntegerField(primary_key=True)
